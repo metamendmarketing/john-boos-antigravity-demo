@@ -1,0 +1,11 @@
+source_id,title,url,type,use,verified_on
+S001,John Boos Literature,https://www.johnboos.com/literature,manufacturer_literature_index,Catalog/literature landing page; confirms public Boos Steel literature and 2026 price list exist.,2026-08-27
+S002,John Boos Boos Steel,https://www.johnboos.com/boos-steel,manufacturer_page,Commercial stainless steel overview.,2026-08-27
+S003,KCL John Boos embedded model page,https://johnboos.kclcad.com/app/I108920834#models,technical_library_entry,Prospect/reference URL; do not require login or scrape.,2026-08-27
+S004,KCL Manufacturer Embedded Hosting,https://kclcad.com/manufacturer/,platform_page,Background for KCL manufacturer catalog/technical hosting.,2026-08-27
+S005,B-Series Compartment Sink public sheet,https://media.chefsdeal.com/pdf/80dde59bf9f18a05949e665a1e24c028cfac6a023cbe83a53dfe8c30af0a33b4.pdf,public_spec_sheet,Primary sink truth-set source.,2026-08-27
+S006,Stainless Cucina Classico,https://www.johnboos.com/products/stainless-cucina-classico-table?Casters=Without&Overall+Height=36%22&Table+Top+Size=48%22+x+24%22+x+1-1%2F2%22,manufacturer_product_page,BBSS4824 product facts.,2026-08-27
+S007,JNS Wood Top Work Table,https://www.johnboos.com/products/1-1-2-thick-wood-top-work-tables-with-galvanized-shelf-24-wide?Size=60%22+x+24%22+x+1-1%2F2%22,manufacturer_product_page,JNS03 selected variant.,2026-08-27
+S008,Public commercial table listing,https://fordstl.com/work-tables-and-stations/,public_distributor_listing,FBLG/UFBLG/EES8 sample records.,2026-08-27
+S009,EFT8 public spec sheet,https://www.jesrestaurantequipment.com/assets/spec-sheets/2007/John-Boos_EFT8-3612_SpecSheet.pdf,public_spec_sheet,EFT8 family dimensions/features.,2026-08-27
+S010,FBLG7230 public product listing,https://www.katom.com/416-FBLG7230.html,public_distributor_listing,Detailed FBLG7230 dimensions/features.,2026-08-27

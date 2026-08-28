@@ -1,0 +1,158 @@
+[
+  {
+    "path": "00_START_HERE.md",
+    "bytes": 2000
+  },
+  {
+    "path": "ANTIGRAVITY_MASTER_PROMPT.md",
+    "bytes": 6043
+  },
+  {
+    "path": "README.md",
+    "bytes": 1611
+  },
+  {
+    "path": "app-blueprint/COMPONENTS.md",
+    "bytes": 656
+  },
+  {
+    "path": "app-blueprint/COPY_DECK.md",
+    "bytes": 1097
+  },
+  {
+    "path": "app-blueprint/DESIGN_SYSTEM.md",
+    "bytes": 801
+  },
+  {
+    "path": "app-blueprint/ROUTES.md",
+    "bytes": 587
+  },
+  {
+    "path": "app-blueprint/STATE_MACHINE.json",
+    "bytes": 1199
+  },
+  {
+    "path": "app-blueprint/WIREFRAMES.md",
+    "bytes": 1093
+  },
+  {
+    "path": "data/decision_rules.json",
+    "bytes": 1070
+  },
+  {
+    "path": "data/demo_scenarios.json",
+    "bytes": 2119
+  },
+  {
+    "path": "data/field_dictionary.csv",
+    "bytes": 1160
+  },
+  {
+    "path": "data/product_families.json",
+    "bytes": 1563
+  },
+  {
+    "path": "data/source_registry.csv",
+    "bytes": 1872
+  },
+  {
+    "path": "data/verified_public_products.csv",
+    "bytes": 10128
+  },
+  {
+    "path": "data/verified_public_products.json",
+    "bytes": 23580
+  },
+  {
+    "path": "docs/01_DEMO_OBJECTIVE.md",
+    "bytes": 1378
+  },
+  {
+    "path": "docs/02_IMPLEMENTATION_PLAN.md",
+    "bytes": 3519
+  },
+  {
+    "path": "docs/03_PRODUCT_SCOPE.md",
+    "bytes": 936
+  },
+  {
+    "path": "docs/04_UX_FLOW.md",
+    "bytes": 1473
+  },
+  {
+    "path": "docs/05_DECISION_ENGINE.md",
+    "bytes": 1964
+  },
+  {
+    "path": "docs/06_AI_BEHAVIOR.md",
+    "bytes": 1126
+  },
+  {
+    "path": "docs/07_DATA_MODEL.md",
+    "bytes": 1469
+  },
+  {
+    "path": "docs/08_TECHNICAL_ARCHITECTURE.md",
+    "bytes": 1039
+  },
+  {
+    "path": "docs/09_DATA_ACQUISITION_NO_ACCESS.md",
+    "bytes": 1311
+  },
+  {
+    "path": "docs/10_ACCEPTANCE_CRITERIA.md",
+    "bytes": 1282
+  },
+  {
+    "path": "docs/11_DEMO_SCRIPT.md",
+    "bytes": 1414
+  },
+  {
+    "path": "docs/12_FUTURE_PRODUCTION_INTEGRATION.md",
+    "bytes": 716
+  },
+  {
+    "path": "docs/13_BRAND_LEGAL_GUARDRAILS.md",
+    "bytes": 981
+  },
+  {
+    "path": "docs/14_PUBLIC_SOURCE_NOTES.md",
+    "bytes": 1038
+  },
+  {
+    "path": "project-config.json",
+    "bytes": 490
+  },
+  {
+    "path": "prompts/conversation_assistant.md",
+    "bytes": 488
+  },
+  {
+    "path": "prompts/extraction_schema.json",
+    "bytes": 1516
+  },
+  {
+    "path": "prompts/recommendation_explainer.md",
+    "bytes": 589
+  },
+  {
+    "path": "prompts/requirement_parser.md",
+    "bytes": 883
+  },
+  {
+    "path": "scripts/validate_demo_data.py",
+    "bytes": 595
+  },
+  {
+    "path": "tests/acceptance_tests.md",
+    "bytes": 1110
+  },
+  {
+    "path": "tests/expected_rankings.csv",
+    "bytes": 262
+  },
+  {
+    "path": "tests/sample_queries.json",
+    "bytes": 895
+  }
+]

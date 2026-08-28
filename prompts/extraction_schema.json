@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EquipmentRequirements",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "category": {
+      "type": "string",
+      "enum": [
+        "compartment_sink",
+        "work_table",
+        "filler_table",
+        "equipment_stand",
+        "unknown"
+      ]
+    },
+    "compartments": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "maxOverallWidthIn": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "maxOverallDepthIn": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "bowlWidthIn": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "bowlFrontToBackIn": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "bowlDepthIn": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "drainboardSide": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "none",
+        "left",
+        "right",
+        "both",
+        "any",
+        null
+      ]
+    },
+    "drainboardLengthIn": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "exactFitOnly": {
+      "type": "boolean"
+    },
+    "freeTextContext": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "uncertainties": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "category",
+    "exactFitOnly",
+    "uncertainties"
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "states": [
+    "landing",
+    "parsing",
+    "review_requirements",
+    "configuring",
+    "matching",
+    "results",
+    "product_detail",
+    "compare",
+    "project",
+    "no_exact_match"
+  ],
+  "transitions": [
+    {
+      "from": "landing",
+      "event": "SUBMIT_TEXT",
+      "to": "parsing"
+    },
+    {
+      "from": "parsing",
+      "event": "PARSE_SUCCESS",
+      "to": "review_requirements"
+    },
+    {
+      "from": "landing",
+      "event": "MANUAL_CONFIG",
+      "to": "configuring"
+    },
+    {
+      "from": "review_requirements",
+      "event": "FIND_MATCHES",
+      "to": "matching"
+    },
+    {
+      "from": "configuring",
+      "event": "FIND_MATCHES",
+      "to": "matching"
+    },
+    {
+      "from": "matching",
+      "event": "HAS_EXACT_OR_NEAR_RESULTS",
+      "to": "results"
+    },
+    {
+      "from": "matching",
+      "event": "NO_EXACT_RESULTS",
+      "to": "no_exact_match"
+    },
+    {
+      "from": "results",
+      "event": "OPEN_PRODUCT",
+      "to": "product_detail"
+    },
+    {
+      "from": "results",
+      "event": "COMPARE",
+      "to": "compare"
+    },
+    {
+      "from": "results",
+      "event": "ADD_TO_PROJECT",
+      "to": "project"
+    }
+  ]
+}

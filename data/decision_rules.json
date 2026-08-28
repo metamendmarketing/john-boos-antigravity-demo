@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "category": "compartment_sink",
+  "exact_mode": {
+    "hard_constraints": [
+      "category",
+      "compartments",
+      "max_overall_width_in",
+      "drainboard_layout",
+      "exact_drainboard_length_when_known",
+      "exact_bowl_size_when_known"
+    ],
+    "description": "Known conflicts eliminate a product."
+  },
+  "near_match_mode": {
+    "hard_constraints": [
+      "category",
+      "compartments",
+      "max_overall_width_in"
+    ],
+    "description": "Functional preferences become scoring penalties."
+  },
+  "weights": {
+    "base": 100,
+    "drainboard_layout_mismatch": -45,
+    "drainboard_length_mismatch": -20,
+    "bowl_size_mismatch": -15,
+    "important_unknown": -8,
+    "unused_width_per_inch": -0.15,
+    "unused_width_penalty_cap": -15,
+    "exact_drainboard_layout_bonus": 10,
+    "exact_bowl_size_bonus": 5,
+    "verified_public_bonus": 5,
+    "high_completeness_bonus": 3
+  },
+  "tie_break": [
+    "score_desc",
+    "compromise_count_asc",
+    "unused_width_asc",
+    "data_completeness_desc",
+    "model_asc"
+  ]
+}

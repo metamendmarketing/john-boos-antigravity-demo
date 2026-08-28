@@ -1,0 +1,76 @@
+[
+  {
+    "id": "hero",
+    "title": "90-inch wall / boards both sides",
+    "input": "I have 90 inches of wall space and need a 3 compartment sink with 18 inch drainboards on both sides.",
+    "requirements": {
+      "category": "compartment_sink",
+      "compartments": 3,
+      "maxOverallWidthIn": 90,
+      "drainboardSide": "both",
+      "drainboardLengthIn": 18,
+      "exactFitOnly": true
+    },
+    "expectedBestModel": "3B16204-2D18-X",
+    "expectedFacts": [
+      "87 in overall width",
+      "3 in remaining width",
+      "two 18 in drainboards",
+      "three 16 x 20 x 14 in bowls"
+    ]
+  },
+  {
+    "id": "left-18x18",
+    "title": "18x18 bowls / left board",
+    "input": "I want three 18 by 18 bowls, one 18 inch drainboard on the left, and need it under 80 inches.",
+    "requirements": {
+      "category": "compartment_sink",
+      "compartments": 3,
+      "maxOverallWidthIn": 80,
+      "bowlWidthIn": 18,
+      "bowlFrontToBackIn": 18,
+      "drainboardSide": "left",
+      "drainboardLengthIn": 18,
+      "exactFitOnly": true
+    },
+    "expectedBestModel": "3B184-1D18L-X",
+    "expectedFacts": [
+      "76 in overall width",
+      "4 in remaining width",
+      "left 18 in drainboard",
+      "three 18 x 18 x 14 in bowls"
+    ]
+  },
+  {
+    "id": "too-narrow",
+    "title": "No exact both-board fit under 80",
+    "input": "I have 80 inches max and need a 3 bay sink with drainboards on both sides.",
+    "requirements": {
+      "category": "compartment_sink",
+      "compartments": 3,
+      "maxOverallWidthIn": 80,
+      "drainboardSide": "both",
+      "exactFitOnly": true
+    },
+    "expectedBestModel": null,
+    "expectedFacts": [
+      "No exact product in demo dataset"
+    ]
+  },
+  {
+    "id": "compact-no-boards",
+    "title": "Compact 3-bay",
+    "input": "Smallest 3 compartment sink with no drainboards.",
+    "requirements": {
+      "category": "compartment_sink",
+      "compartments": 3,
+      "drainboardSide": "none",
+      "exactFitOnly": true
+    },
+    "expectedBestModel": "3B16204-X",
+    "expectedFacts": [
+      "53 in overall width",
+      "no drainboards"
+    ]
+  }
+]

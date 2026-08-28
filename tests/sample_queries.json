@@ -1,0 +1,36 @@
+[
+  {
+    "query": "I have 90 inches of wall space and need a 3 compartment sink with 18 inch drainboards on both sides.",
+    "expect": {
+      "maxOverallWidthIn": 90,
+      "compartments": 3,
+      "drainboardSide": "both",
+      "drainboardLengthIn": 18
+    }
+  },
+  {
+    "query": "Need a three bay sink under 80 inches, 18 x 18 bowls and a left drainboard.",
+    "expect": {
+      "maxOverallWidthIn": 80,
+      "compartments": 3,
+      "bowlWidthIn": 18,
+      "bowlFrontToBackIn": 18,
+      "drainboardSide": "left"
+    }
+  },
+  {
+    "query": "Smallest three-compartment sink with no drainboards.",
+    "expect": {
+      "compartments": 3,
+      "drainboardSide": "none"
+    }
+  },
+  {
+    "query": "I have a seven foot wall for a 3 bowl sink, drainboard on the right.",
+    "expect": {
+      "maxOverallWidthIn": 84,
+      "compartments": 3,
+      "drainboardSide": "right"
+    }
+  }
+]

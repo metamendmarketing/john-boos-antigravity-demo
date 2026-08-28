@@ -1,0 +1,14 @@
+{
+  "projectName": "John Boos Intelligent Specifier \u2014 Private Concept Demo",
+  "owner": "Metamend",
+  "demoMode": true,
+  "requiresSecrets": false,
+  "requiresDatabase": false,
+  "requiresKclAccess": false,
+  "requiresManufacturerAccess": false,
+  "defaultCategory": "compartment_sink",
+  "primaryScenario": "hero",
+  "dataAdapter": "local_json",
+  "llmRequired": false,
+  "disclaimer": "Private concept demonstration by Metamend. Not affiliated with or endorsed by John Boos & Co."
+}

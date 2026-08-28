@@ -1,0 +1,17 @@
+field,type,meaning,rule
+model,string,Manufacturer model identifier,verified source only
+category,enum,Normalized demo category,normalized from source context
+overall_width_in,number,Overall left-to-right size in inches,blank if unknown
+overall_depth_in,number,Overall front-to-back size in inches,blank if unknown
+overall_height_in,number,Overall height in inches,blank if unknown
+compartments,integer,Sink compartment count,sink only
+bowl_width_in,number,Individual bowl width,sink only
+bowl_front_to_back_in,number,Individual bowl front-to-back dimension,sink only
+bowl_depth_in,number,Individual bowl depth,sink only
+drainboard_count,integer,Number of drainboards,sink only
+left_drainboard_in,number,Left drainboard length; 0 means verified none,sink only
+right_drainboard_in,number,Right drainboard length; 0 means verified none,sink only
+backsplash_in,number,Backsplash/up-turn height where verified,blank if unknown
+top_gauge,number,Stainless steel gauge,blank if unknown
+stainless_type,string,Stainless series/type,blank if unknown
+verification_status,enum,verified_public / partial_public / illustrative_demo,never hide in detail view

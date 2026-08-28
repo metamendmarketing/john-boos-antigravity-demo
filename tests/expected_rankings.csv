@@ -1,0 +1,4 @@
+scenario_id,rank,model,expectation
+hero,1,3B16204-2D18-X,Exact fit: 87 in width and two 18 in drainboards
+left-18x18,1,3B184-1D18L-X,"Exact 18x18 bowls, left 18 in drainboard, 76 in width"
+compact-no-boards,1,3B16204-X,Smallest verified no-drainboard sample
