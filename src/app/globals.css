@@ -3,18 +3,91 @@
 @tailwind utilities;
 
 :root {
-  --background: #fbfaf8;
+  --background: #fcfbf9;
   --foreground: #1f1f1f;
+  --boos-oxblood: #6f2e18;
+  --boos-oxblood-hover: #562210;
+  --boos-gold: #c5a880;
+  --boos-canvas: #fcfbf9;
+  --boos-surface: #f5f4ef;
+  --boos-border: #e5e5e2;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: "Neue Haas Grotesk Text Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Print styles for equipment schedule */
+/* Official John Boos Pill Button Rules from primaryButton.css */
+.boos-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Neue Haas Grotesk Text Pro", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background-color: #6f2e18;
+  color: #fcfbf9;
+  border-radius: 9999px;
+  border: 1px solid #6f2e18;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 4px rgba(111, 46, 24, 0.15);
+}
+
+.boos-btn-primary:hover {
+  background-color: #562210;
+  border-color: #562210;
+  box-shadow: 0 4px 10px rgba(111, 46, 24, 0.25);
+  transform: translateY(-1px);
+}
+
+.boos-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Neue Haas Grotesk Text Pro", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background-color: #1f1f1f;
+  color: #fcfbf9;
+  border-radius: 9999px;
+  border: 1px solid #1f1f1f;
+  transition: all 0.25s ease;
+}
+
+.boos-btn-secondary:hover {
+  background-color: #121212;
+  border-color: #121212;
+  transform: translateY(-1px);
+}
+
+.boos-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Neue Haas Grotesk Text Pro", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background-color: #ffffff;
+  color: #1f1f1f;
+  border-radius: 9999px;
+  border: 1px solid #d7d4c8;
+  transition: all 0.25s ease;
+}
+
+.boos-btn-outline:hover {
+  background-color: #f5f4ef;
+  border-color: #1f1f1f;
+}
+
+/* Print styles */
 @media print {
   body {
     background: #ffffff !important;

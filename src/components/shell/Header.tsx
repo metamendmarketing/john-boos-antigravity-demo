@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  Search,
   FolderKanban,
   Columns2,
   SlidersHorizontal,
@@ -56,9 +55,9 @@ export const Header: React.FC = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-[#e5e5e2] shadow-xs text-[#1f1f1f]">
+    <header className="sticky top-0 z-50 bg-[#fcfbf9] border-b border-[#e5e5e2] shadow-xs text-[#1f1f1f]">
       {/* Official Top Announcement Bar */}
-      <div className="bg-[#121212] text-white px-4 sm:px-8 py-2 flex items-center justify-between text-[11px] font-sans tracking-widest uppercase">
+      <div className="bg-[#121212] text-[#fcfbf9] px-4 sm:px-8 py-2 flex items-center justify-between text-[11px] font-sans tracking-widest uppercase">
         <div className="flex items-center space-x-3">
           <span className="font-bold text-amber-300">1887</span>
           <span className="text-zinc-500">&bull;</span>
@@ -76,12 +75,11 @@ export const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Official Header Bar */}
+      {/* Main Header Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between">
         {/* Official John Boos SVG Logo */}
         <Link href="/" className="flex items-center space-x-3 group">
           <div className="relative">
-            {/* SVG Logo */}
             <img
               src="/john_boos_logo.svg"
               alt="John Boos & Co."
@@ -89,7 +87,7 @@ export const Header: React.FC = () => {
             />
           </div>
           <div className="hidden sm:flex flex-col border-l border-[#d7d4c8] pl-3 py-1">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-[#a91b1b]">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-[#6f2e18]">
               Commercial Division
             </span>
             <span className="text-[11px] font-serif font-bold text-[#1f1f1f] tracking-tight">
@@ -106,20 +104,20 @@ export const Header: React.FC = () => {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative px-3.5 py-2 text-xs font-semibold tracking-wider uppercase transition-all flex items-center space-x-1.5 ${
+                className={`relative px-4 py-2 text-xs font-bold tracking-wider uppercase transition-all flex items-center space-x-1.5 ${
                   isActive
-                    ? "text-[#a91b1b] font-bold"
-                    : "text-[#474235] hover:text-[#1f1f1f] hover:bg-[#f4f3ef] rounded-md"
+                    ? "text-[#6f2e18] font-bold"
+                    : "text-[#474235] hover:text-[#1f1f1f] hover:bg-[#f5f4ef] rounded-full"
                 }`}
               >
                 <span>{link.label}</span>
                 {link.badge !== null && link.badge !== undefined && (
-                  <span className="px-1.5 py-0.2 rounded-full bg-[#a91b1b] text-white text-[10px] font-bold ml-1">
+                  <span className="px-2 py-0.5 rounded-full bg-[#6f2e18] text-[#fcfbf9] text-[10px] font-bold ml-1">
                     {link.badge}
                   </span>
                 )}
                 {isActive && (
-                  <span className="absolute bottom-0 left-3.5 right-3.5 h-0.5 bg-[#a91b1b]" />
+                  <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-[#6f2e18] rounded-full" />
                 )}
               </Link>
             );
@@ -130,12 +128,12 @@ export const Header: React.FC = () => {
         <div className="flex items-center space-x-3">
           <Link
             href="/project"
-            className="relative p-2 text-[#1f1f1f] hover:text-[#a91b1b] hover:bg-[#f4f3ef] rounded-lg transition-colors"
+            className="relative p-2.5 text-[#1f1f1f] hover:text-[#6f2e18] hover:bg-[#f5f4ef] rounded-full transition-colors"
             title="Equipment Schedule"
           >
             <FolderKanban className="w-5 h-5" />
             {itemCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#a91b1b] text-white text-[10px] font-bold flex items-center justify-center shadow">
+              <span className="absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full bg-[#6f2e18] text-[#fcfbf9] text-[10px] font-bold flex items-center justify-center shadow">
                 {itemCount}
               </span>
             )}
@@ -143,12 +141,12 @@ export const Header: React.FC = () => {
 
           <Link
             href="/compare"
-            className="relative p-2 text-[#1f1f1f] hover:text-[#a91b1b] hover:bg-[#f4f3ef] rounded-lg transition-colors"
+            className="relative p-2.5 text-[#1f1f1f] hover:text-[#6f2e18] hover:bg-[#f5f4ef] rounded-full transition-colors"
             title="Compare Tray"
           >
             <Columns2 className="w-5 h-5" />
             {compareCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#1f1f1f] text-white text-[10px] font-bold flex items-center justify-center shadow">
+              <span className="absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full bg-[#1f1f1f] text-[#fcfbf9] text-[10px] font-bold flex items-center justify-center shadow">
                 {compareCount}
               </span>
             )}
@@ -157,7 +155,7 @@ export const Header: React.FC = () => {
           <button
             onClick={handleLogout}
             title="Exit Demo"
-            className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-[#d7d4c8] bg-[#fbfaf8] hover:bg-[#f4f3ef] text-[#5c5645] hover:text-[#1f1f1f] text-xs font-semibold transition-colors"
+            className="hidden sm:flex items-center space-x-1.5 px-4 py-2 rounded-full border border-[#d7d4c8] bg-white hover:bg-[#f5f4ef] text-[#5c5645] hover:text-[#1f1f1f] text-xs font-bold uppercase tracking-wider transition-colors"
           >
             <LogOut className="w-3.5 h-3.5 text-[#756e5a]" />
             <span>Lock</span>
@@ -166,7 +164,7 @@ export const Header: React.FC = () => {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 text-[#1f1f1f] hover:bg-[#f4f3ef] rounded-lg"
+            className="lg:hidden p-2 text-[#1f1f1f] hover:bg-[#f5f4ef] rounded-full"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -175,7 +173,7 @@ export const Header: React.FC = () => {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-[#e5e5e2] bg-white px-4 py-4 space-y-2 shadow-xl">
+        <div className="lg:hidden border-t border-[#e5e5e2] bg-[#fcfbf9] px-4 py-4 space-y-2 shadow-xl">
           {navLinks.map((link) => {
             const Icon = link.icon;
             const isActive = pathname === link.href;
@@ -184,8 +182,8 @@ export const Header: React.FC = () => {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider ${
-                  isActive ? "bg-[#1f1f1f] text-white" : "text-[#474235] hover:bg-[#f4f3ef]"
+                className={`flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider ${
+                  isActive ? "bg-[#6f2e18] text-[#fcfbf9]" : "text-[#474235] hover:bg-[#f5f4ef]"
                 }`}
               >
                 <div className="flex items-center space-x-2.5">
@@ -193,7 +191,7 @@ export const Header: React.FC = () => {
                   <span>{link.label}</span>
                 </div>
                 {link.badge !== null && link.badge !== undefined && (
-                  <span className="px-2 py-0.5 rounded-full bg-[#a91b1b] text-white text-[10px]">
+                  <span className="px-2 py-0.5 rounded-full bg-[#6f2e18] text-white text-[10px]">
                     {link.badge}
                   </span>
                 )}

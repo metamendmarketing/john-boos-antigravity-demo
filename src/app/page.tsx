@@ -115,8 +115,8 @@ export default function HomePage() {
     <div className="space-y-16 py-2">
       {/* Top Heritage Badge & Title */}
       <div className="text-center max-w-3xl mx-auto space-y-3">
-        <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white border border-[#d7d4c8] text-xs font-semibold text-[#474235] shadow-2xs">
-          <span className="font-serif font-bold text-[#a91b1b]">EST. 1887</span>
+        <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white border border-[#d7d4c8] text-xs font-semibold text-[#474235] shadow-2xs">
+          <span className="font-serif font-bold text-[#6f2e18]">EST. 1887</span>
           <span>&bull;</span>
           <span className="uppercase tracking-widest text-[11px] font-bold text-[#1f1f1f]">
             Commercial Foodservice Sizing Engine
@@ -134,10 +134,10 @@ export default function HomePage() {
       {/* 1. UP TOP: Clean, Focused Step-by-Step Guided Wizard (Not Overwhelming) */}
       <div className="max-w-3xl mx-auto bg-white border-2 border-[#1f1f1f] rounded-3xl shadow-xl overflow-hidden">
         {/* Wizard Header Progress Bar */}
-        <div className="bg-[#fbfaf8] border-b border-[#e5e5e2] px-6 py-4">
+        <div className="bg-[#fcfbf9] border-b border-[#e5e5e2] px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <span className="w-6 h-6 rounded-full bg-[#a91b1b] text-white text-xs font-mono font-bold flex items-center justify-center">
+              <span className="w-6 h-6 rounded-full bg-[#6f2e18] text-white text-xs font-mono font-bold flex items-center justify-center">
                 {wizardStep}
               </span>
               <span className="text-xs font-bold uppercase tracking-wider text-[#1f1f1f]">
@@ -157,7 +157,7 @@ export default function HomePage() {
                   onClick={() => setWizardStep(s)}
                   className={`w-3 h-3 rounded-full transition-all ${
                     wizardStep === s
-                      ? "bg-[#a91b1b] scale-125 ring-2 ring-[#a91b1b]/20"
+                      ? "bg-[#6f2e18] scale-125 ring-2 ring-[#6f2e18]/20"
                       : wizardStep > s
                       ? "bg-[#1f1f1f]"
                       : "bg-[#d7d4c8]"
@@ -213,11 +213,11 @@ export default function HomePage() {
                       onClick={() => setCategory(item.id as ProductCategory)}
                       className={`p-5 rounded-2xl border-2 text-left transition-all flex flex-col justify-between ${
                         isSelected
-                          ? "bg-[#f4f3ef] border-[#a91b1b] ring-4 ring-[#a91b1b]/10 shadow-sm"
+                          ? "bg-[#fbf2ee] border-[#6f2e18] ring-4 ring-[#6f2e18]/10 shadow-sm"
                           : "bg-white border-[#e5e5e2] hover:border-[#b8b3a0]"
                       }`}
                     >
-                      <Icon className={`w-8 h-8 mb-3 ${isSelected ? "text-[#a91b1b]" : "text-[#756e5a]"}`} />
+                      <Icon className={`w-8 h-8 mb-3 ${isSelected ? "text-[#6f2e18]" : "text-[#756e5a]"}`} />
                       <div>
                         <span className="font-bold text-sm text-[#1f1f1f] block mb-1">
                           {item.title}
@@ -262,7 +262,7 @@ export default function HomePage() {
                     onClick={() => setWallSpace(item.val)}
                     className={`p-3.5 rounded-xl border text-left transition-all ${
                       wallSpace === item.val
-                        ? "bg-[#f4f3ef] border-[#a91b1b] ring-2 ring-[#a91b1b]/20 font-bold"
+                        ? "bg-[#fbf2ee] border-[#6f2e18] ring-2 ring-[#6f2e18]/20 font-bold"
                         : "bg-white border-[#e5e5e2] hover:border-[#b8b3a0]"
                     }`}
                   >
@@ -275,10 +275,10 @@ export default function HomePage() {
               </div>
 
               {/* Slider option */}
-              <div className="p-4 rounded-2xl bg-[#fbfaf8] border border-[#e5e5e2] space-y-2">
+              <div className="p-4 rounded-2xl bg-[#fcfbf9] border border-[#e5e5e2] space-y-2">
                 <div className="flex justify-between items-center text-xs">
                   <span className="font-bold text-[#1f1f1f]">Fine-Tune Custom Width:</span>
-                  <span className="font-mono font-black text-sm text-[#a91b1b]">{wallSpace}&quot; ({(wallSpace / 12).toFixed(1)} ft)</span>
+                  <span className="font-mono font-black text-sm text-[#6f2e18]">{wallSpace}&quot; ({(wallSpace / 12).toFixed(1)} ft)</span>
                 </div>
                 <input
                   type="range"
@@ -286,7 +286,7 @@ export default function HomePage() {
                   max="125"
                   value={wallSpace}
                   onChange={(e) => setWallSpace(parseInt(e.target.value))}
-                  className="w-full h-2 bg-[#d7d4c8] rounded-lg appearance-none cursor-pointer accent-[#a91b1b]"
+                  className="w-full h-2 bg-[#d7d4c8] rounded-lg appearance-none cursor-pointer accent-[#6f2e18]"
                 />
               </div>
             </div>
@@ -324,7 +324,7 @@ export default function HomePage() {
                             onClick={() => setCompartments(item.num)}
                             className={`p-3 rounded-xl border text-center transition-all ${
                               compartments === item.num
-                                ? "bg-[#f4f3ef] border-[#a91b1b] ring-2 ring-[#a91b1b]/20 font-bold"
+                                ? "bg-[#fbf2ee] border-[#6f2e18] ring-2 ring-[#6f2e18]/20 font-bold"
                                 : "bg-white border-[#e5e5e2] hover:border-[#b8b3a0]"
                             }`}
                           >
@@ -353,7 +353,7 @@ export default function HomePage() {
                             onClick={() => setBowlSize(item.id)}
                             className={`p-3 rounded-xl border text-left transition-all ${
                               bowlSize === item.id
-                                ? "bg-[#f4f3ef] border-[#a91b1b] ring-2 ring-[#a91b1b]/20"
+                                ? "bg-[#fbf2ee] border-[#6f2e18] ring-2 ring-[#6f2e18]/20"
                                 : "bg-white border-[#e5e5e2] hover:border-[#b8b3a0]"
                             }`}
                           >
@@ -383,7 +383,7 @@ export default function HomePage() {
                       type="button"
                       onClick={() => setTableDepth(30)}
                       className={`p-4 rounded-xl border text-left ${
-                        tableDepth === 30 ? "bg-[#f4f3ef] border-[#a91b1b] ring-2 ring-[#a91b1b]/20" : "bg-white border-[#e5e5e2]"
+                        tableDepth === 30 ? "bg-[#fbf2ee] border-[#6f2e18] ring-2 ring-[#6f2e18]/20" : "bg-white border-[#e5e5e2]"
                       }`}
                     >
                       <span className="font-bold text-sm text-[#1f1f1f] block">30&quot; Standard Depth</span>
@@ -393,7 +393,7 @@ export default function HomePage() {
                       type="button"
                       onClick={() => setTableDepth(24)}
                       className={`p-4 rounded-xl border text-left ${
-                        tableDepth === 24 ? "bg-[#f4f3ef] border-[#a91b1b] ring-2 ring-[#a91b1b]/20" : "bg-white border-[#e5e5e2]"
+                        tableDepth === 24 ? "bg-[#fbf2ee] border-[#6f2e18] ring-2 ring-[#6f2e18]/20" : "bg-white border-[#e5e5e2]"
                       }`}
                     >
                       <span className="font-bold text-sm text-[#1f1f1f] block">24&quot; Compact Depth</span>
@@ -430,8 +430,8 @@ export default function HomePage() {
                     onClick={() => setDrainboardSide(item.id as DrainboardSide)}
                     className={`p-4 rounded-xl border text-left transition-all ${
                       drainboardSide === item.id
-                        ? "bg-[#f4f3ef] border-[#a91b1b] ring-2 ring-[#a91b1b]/20 font-bold"
-                        : "bg-white border-[#e5e5e2] hover:border-[#b8b3a0]"
+                        ? "bg-[#fbf2ee] border-[#6f2e18] ring-2 ring-[#6f2e18]/20 font-bold"
+                        : "bg-white border-[#e5e5e2] text-[#474235] hover:border-[#b8b3a0]"
                     }`}
                   >
                     <span className="font-bold text-xs text-[#1f1f1f] block mb-1">
@@ -443,8 +443,8 @@ export default function HomePage() {
               </div>
 
               {drainboardSide !== "none" && (
-                <div className="p-4 rounded-2xl bg-[#fbfaf8] border border-[#e5e5e2] space-y-2">
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#1f1f1f] block">
+                <div className="p-4 rounded-2xl bg-[#fcfbf9] border border-[#e5e5e2] space-y-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#1f1f1f] block font-sans">
                     Drainboard Length:
                   </span>
                   <div className="flex gap-3">
@@ -457,9 +457,9 @@ export default function HomePage() {
                         key={len.val}
                         type="button"
                         onClick={() => setDrainboardLength(len.val)}
-                        className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
+                        className={`px-4 py-2 rounded-full text-xs font-mono font-bold transition-all ${
                           drainboardLength === len.val
-                            ? "bg-[#a91b1b] text-white shadow-xs"
+                            ? "bg-[#6f2e18] text-white shadow-xs"
                             : "bg-white text-[#5c5645] hover:bg-[#e8e6df] border border-[#d7d4c8]"
                         }`}
                       >
@@ -494,7 +494,7 @@ export default function HomePage() {
                     <div>
                       <Link
                         href={`/products/${encodeURIComponent(topMatch.product.model)}`}
-                        className="font-mono font-black text-3xl text-[#1f1f1f] hover:text-[#a91b1b] transition-colors block"
+                        className="font-mono font-black text-3xl text-[#1f1f1f] hover:text-[#6f2e18] transition-colors block"
                       >
                         {topMatch.product.model}
                       </Link>
@@ -507,7 +507,7 @@ export default function HomePage() {
                   </div>
 
                   {/* Schematic Drawing */}
-                  <div className="p-3 rounded-2xl bg-[#f4f3ef] border border-[#e5e5e2]">
+                  <div className="p-3 rounded-2xl bg-[#f5f4ef] border border-[#e5e5e2]">
                     <ProductSchematicSvg product={topMatch.product} className="w-full h-auto max-h-40" />
                   </div>
 
@@ -536,7 +536,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={() => setWizardStep(wizardStep - 1)}
-                className="px-4 py-2.5 rounded-xl bg-[#f4f3ef] hover:bg-[#e8e6df] text-[#1f1f1f] text-xs font-bold uppercase tracking-wider flex items-center space-x-1.5 border border-[#d7d4c8] transition-colors"
+                className="boos-btn-outline px-5 py-2.5 text-xs flex items-center space-x-1.5"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Back</span>
@@ -549,7 +549,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={() => setWizardStep(wizardStep + 1)}
-                className="px-6 py-2.5 rounded-xl bg-[#a91b1b] hover:bg-[#8b1515] text-white text-xs font-bold uppercase tracking-wider flex items-center space-x-1.5 shadow-md transition-all"
+                className="boos-btn-primary px-7 py-2.5 text-xs flex items-center space-x-1.5"
               >
                 <span>{wizardStep === 4 ? "Resolve Match" : "Next Step"}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -558,11 +558,7 @@ export default function HomePage() {
               <div className="flex gap-2">
                 <button
                   onClick={handleAddProject}
-                  className={`px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center space-x-1.5 transition-all ${
-                    topMatch && isInProject(topMatch.product.id)
-                      ? "bg-[#f4f3ef] text-emerald-800 border border-emerald-300"
-                      : "bg-white hover:bg-[#f4f3ef] text-[#1f1f1f] border border-[#d7d4c8]"
-                  }`}
+                  className="boos-btn-outline px-5 py-2.5 text-xs flex items-center space-x-1.5"
                 >
                   {topMatch && isInProject(topMatch.product.id) ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
                   <span>{addedNotice ? "Saved!" : topMatch && isInProject(topMatch.product.id) ? "In Schedule" : "Add to Project"}</span>
@@ -571,7 +567,7 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={handleLaunchFullResults}
-                  className="px-6 py-2.5 rounded-xl bg-[#a91b1b] hover:bg-[#8b1515] text-white text-xs font-bold uppercase tracking-wider flex items-center space-x-1.5 shadow-md transition-all"
+                  className="boos-btn-primary px-7 py-2.5 text-xs flex items-center space-x-1.5"
                 >
                   <span>Full Spec View</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -586,14 +582,14 @@ export default function HomePage() {
       <div className="max-w-5xl mx-auto border border-[#e5e5e2] rounded-3xl bg-white overflow-hidden shadow-sm">
         <button
           onClick={() => setShowAdvancedStudio(!showAdvancedStudio)}
-          className="w-full px-6 py-5 bg-[#fbfaf8] hover:bg-[#f4f3ef] flex items-center justify-between text-left transition-colors"
+          className="w-full px-6 py-5 bg-[#fcfbf9] hover:bg-[#f5f4ef] flex items-center justify-between text-left transition-colors"
         >
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-lg bg-[#1f1f1f] text-white flex items-center justify-center">
-              <SlidersHorizontal className="w-4 h-4 text-amber-300" />
+            <div className="w-8 h-8 rounded-full bg-[#6f2e18] text-white flex items-center justify-center">
+              <SlidersHorizontal className="w-4 h-4 text-amber-200" />
             </div>
             <div>
-              <h3 className="text-sm font-bold uppercase tracking-wider text-[#1f1f1f]">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-[#1f1f1f] font-sans">
                 All-in-One Studio Control Board
               </h3>
               <p className="text-xs text-[#756e5a]">
@@ -602,7 +598,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 text-xs font-bold text-[#a91b1b]">
+          <div className="flex items-center space-x-2 text-xs font-bold text-[#6f2e18] uppercase tracking-wider font-sans">
             <span>{showAdvancedStudio ? "Collapse Studio" : "Expand All-in-One Studio"}</span>
             {showAdvancedStudio ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </div>
@@ -626,10 +622,10 @@ export default function HomePage() {
                     <button
                       key={item.id}
                       onClick={() => setCategory(item.id as ProductCategory)}
-                      className={`p-2 rounded-lg text-xs font-bold transition-all ${
+                      className={`p-2 rounded-full text-xs font-bold transition-all ${
                         category === item.id
-                          ? "bg-[#1f1f1f] text-white"
-                          : "bg-[#f4f3ef] text-[#474235] border border-[#d7d4c8]"
+                          ? "bg-[#6f2e18] text-white"
+                          : "bg-[#f5f4ef] text-[#474235] border border-[#d7d4c8]"
                       }`}
                     >
                       {item.name}
@@ -642,7 +638,7 @@ export default function HomePage() {
               <div className="space-y-2">
                 <div className="flex justify-between items-center text-xs font-bold">
                   <span>Wall Space Width:</span>
-                  <span className="font-mono text-[#a91b1b]">{wallSpace}&quot;</span>
+                  <span className="font-mono text-[#6f2e18]">{wallSpace}&quot;</span>
                 </div>
                 <input
                   type="range"
@@ -650,7 +646,7 @@ export default function HomePage() {
                   max="125"
                   value={wallSpace}
                   onChange={(e) => setWallSpace(parseInt(e.target.value))}
-                  className="w-full h-2 bg-[#d7d4c8] rounded-lg accent-[#a91b1b]"
+                  className="w-full h-2 bg-[#d7d4c8] rounded-lg accent-[#6f2e18]"
                 />
               </div>
 
@@ -666,8 +662,8 @@ export default function HomePage() {
                         <button
                           key={num}
                           onClick={() => setCompartments(num)}
-                          className={`py-1.5 rounded-lg text-xs font-bold ${
-                            compartments === num ? "bg-[#a91b1b] text-white" : "bg-[#f4f3ef] border border-[#d7d4c8]"
+                          className={`py-1.5 rounded-full text-xs font-bold ${
+                            compartments === num ? "bg-[#6f2e18] text-white" : "bg-[#f5f4ef] border border-[#d7d4c8]"
                           }`}
                         >
                           {num}B
@@ -688,8 +684,8 @@ export default function HomePage() {
                         <button
                           key={item.id}
                           onClick={() => setBowlSize(item.id)}
-                          className={`py-1.5 rounded-lg text-xs font-mono font-bold ${
-                            bowlSize === item.id ? "bg-[#1f1f1f] text-white" : "bg-[#f4f3ef] border border-[#d7d4c8]"
+                          className={`py-1.5 rounded-full text-xs font-mono font-bold ${
+                            bowlSize === item.id ? "bg-[#1f1f1f] text-white" : "bg-[#f5f4ef] border border-[#d7d4c8]"
                           }`}
                         >
                           {item.label}
@@ -716,8 +712,8 @@ export default function HomePage() {
                       <button
                         key={item.id}
                         onClick={() => setDrainboardSide(item.id as DrainboardSide)}
-                        className={`py-2 rounded-lg font-bold ${
-                          drainboardSide === item.id ? "bg-[#1f1f1f] text-white" : "bg-[#f4f3ef] border border-[#d7d4c8]"
+                        className={`py-2 rounded-full font-bold ${
+                          drainboardSide === item.id ? "bg-[#6f2e18] text-white" : "bg-[#f5f4ef] border border-[#d7d4c8]"
                         }`}
                       >
                         {item.label}
@@ -729,11 +725,11 @@ export default function HomePage() {
             </div>
 
             {/* Live Model Right (5 cols) */}
-            <div className="lg:col-span-5 bg-[#fbfaf8] p-5 rounded-2xl border border-[#e5e5e2] space-y-4">
+            <div className="lg:col-span-5 bg-[#fcfbf9] p-5 rounded-2xl border border-[#e5e5e2] space-y-4">
               {topMatch ? (
                 <>
                   <div className="flex justify-between items-center">
-                    <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                       Exact Match
                     </span>
                     <span className="font-mono text-xs font-bold">{topMatch.product.model}</span>
@@ -742,7 +738,7 @@ export default function HomePage() {
                   <WidthClearanceMeter productWidth={topMatch.product.overall.widthIn} maxWallWidth={wallSpace} />
                   <button
                     onClick={handleLaunchFullResults}
-                    className="w-full py-2.5 rounded-xl bg-[#a91b1b] text-white text-xs font-bold uppercase tracking-wider"
+                    className="boos-btn-primary w-full py-2.5 text-xs"
                   >
                     View Recommendation Details
                   </button>
@@ -758,14 +754,14 @@ export default function HomePage() {
       </div>
 
       {/* 3. UNDERNEATH: Plain English Natural Language Search Drawer */}
-      <div className="max-w-5xl mx-auto bg-[#fbfaf8] border border-[#e5e5e2] rounded-3xl p-6 sm:p-8 space-y-4">
+      <div className="max-w-5xl mx-auto bg-[#fcfbf9] border border-[#e5e5e2] rounded-3xl p-6 sm:p-8 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-lg bg-white border border-[#d7d4c8] flex items-center justify-center text-[#a91b1b]">
+            <div className="w-8 h-8 rounded-full bg-white border border-[#d7d4c8] flex items-center justify-center text-[#6f2e18]">
               <Search className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold uppercase tracking-wider text-[#1f1f1f]">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-[#1f1f1f] font-sans">
                 Natural Language Query Option
               </h3>
               <p className="text-xs text-[#756e5a]">
@@ -776,7 +772,7 @@ export default function HomePage() {
 
           <button
             onClick={() => setShowNlSearch(!showNlSearch)}
-            className="text-xs font-bold text-[#a91b1b] hover:underline"
+            className="text-xs font-bold text-[#6f2e18] hover:underline uppercase tracking-wider font-sans"
           >
             {showNlSearch ? "Hide Text Input" : "Open Search Box"}
           </button>
@@ -790,17 +786,17 @@ export default function HomePage() {
             }}
             className="space-y-3 pt-2"
           >
-            <div className="flex flex-col sm:flex-row gap-2 bg-white p-2 rounded-xl border border-[#d7d4c8] shadow-sm">
+            <div className="flex flex-col sm:flex-row gap-2 bg-white p-2 rounded-full border border-[#d7d4c8] shadow-sm">
               <input
                 type="text"
                 value={nlQuery}
                 onChange={(e) => setNlQuery(e.target.value)}
                 placeholder="e.g. 90 inches wall space, 3 compartment sink with 18 inch drainboards on both sides..."
-                className="w-full bg-transparent px-3 py-2 text-sm text-[#1f1f1f] placeholder-[#948d77] focus:outline-none"
+                className="w-full bg-transparent px-4 py-2 text-sm text-[#1f1f1f] placeholder-[#948d77] focus:outline-none"
               />
               <button
                 type="submit"
-                className="px-6 py-2.5 rounded-lg bg-[#a91b1b] hover:bg-[#8b1515] text-white font-bold text-xs uppercase tracking-wider"
+                className="boos-btn-primary px-6 py-2 text-xs"
               >
                 Find Matches
               </button>
@@ -813,7 +809,7 @@ export default function HomePage() {
                   key={s.id}
                   type="button"
                   onClick={() => router.push(`/results?q=${encodeURIComponent(s.input)}`)}
-                  className="px-2.5 py-1 rounded bg-white hover:bg-[#f4f3ef] border border-[#d7d4c8] text-[11px] text-[#474235] font-mono"
+                  className="px-3 py-1 rounded-full bg-white hover:bg-[#f5f4ef] border border-[#d7d4c8] text-[11px] text-[#474235] font-mono"
                 >
                   [{s.title}]
                 </button>
@@ -826,7 +822,7 @@ export default function HomePage() {
       {/* 4. Commercial Product Line Collection Cards */}
       <div className="space-y-6 pt-2">
         <div className="border-b border-[#e5e5e2] pb-4">
-          <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#a91b1b] block">
+          <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#6f2e18] block">
             Commercial Lines
           </span>
           <h2 className="text-2xl sm:text-3xl font-serif font-black text-[#1f1f1f] tracking-tight">
@@ -836,9 +832,9 @@ export default function HomePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Sinks Card */}
-          <div className="rounded-2xl border border-[#e5e5e2] bg-white p-6 flex flex-col justify-between space-y-4 hover:border-[#a91b1b] transition-all shadow-xs">
+          <div className="rounded-2xl border border-[#e5e5e2] bg-white p-6 flex flex-col justify-between space-y-4 hover:border-[#6f2e18] transition-all shadow-xs">
             <div className="space-y-3">
-              <div className="w-12 h-12 rounded-xl bg-[#f4f3ef] border border-[#d7d4c8] flex items-center justify-center text-[#a91b1b]">
+              <div className="w-12 h-12 rounded-2xl bg-[#f5f4ef] border border-[#d7d4c8] flex items-center justify-center text-[#6f2e18]">
                 <Box className="w-6 h-6" />
               </div>
               <h3 className="font-serif font-bold text-[#1f1f1f] text-lg">B-Series Compartment Sinks</h3>
@@ -849,17 +845,17 @@ export default function HomePage() {
 
             <Link
               href="/catalog?category=compartment_sink"
-              className="inline-flex items-center justify-between px-4 py-2.5 rounded-lg bg-[#a91b1b] hover:bg-[#8b1515] text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-2xs"
+              className="boos-btn-primary py-2.5 px-4 text-xs"
             >
               <span>Browse 14 Sinks</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
             </Link>
           </div>
 
           {/* Work Tables Card */}
           <div className="rounded-2xl border border-[#e5e5e2] bg-white p-6 flex flex-col justify-between space-y-4 hover:border-[#b8b3a0] transition-all shadow-xs">
             <div className="space-y-3">
-              <div className="w-12 h-12 rounded-xl bg-[#f4f3ef] border border-[#d7d4c8] flex items-center justify-center text-[#1f1f1f]">
+              <div className="w-12 h-12 rounded-2xl bg-[#f5f4ef] border border-[#d7d4c8] flex items-center justify-center text-[#1f1f1f]">
                 <Layers2 className="w-6 h-6" />
               </div>
               <h3 className="font-serif font-bold text-[#1f1f1f] text-lg">Commercial Work Tables</h3>
@@ -870,17 +866,17 @@ export default function HomePage() {
 
             <Link
               href="/catalog?category=work_table"
-              className="inline-flex items-center justify-between px-4 py-2.5 rounded-lg bg-[#1f1f1f] hover:bg-[#121212] text-white font-bold text-xs uppercase tracking-wider transition-colors"
+              className="boos-btn-secondary py-2.5 px-4 text-xs"
             >
               <span>Browse 11 Tables</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
             </Link>
           </div>
 
           {/* Filler Tables & Stands */}
           <div className="rounded-2xl border border-[#e5e5e2] bg-white p-6 flex flex-col justify-between space-y-4 hover:border-[#b8b3a0] transition-all shadow-xs">
             <div className="space-y-3">
-              <div className="w-12 h-12 rounded-xl bg-[#f4f3ef] border border-[#d7d4c8] flex items-center justify-center text-[#1f1f1f]">
+              <div className="w-12 h-12 rounded-2xl bg-[#f5f4ef] border border-[#d7d4c8] flex items-center justify-center text-[#1f1f1f]">
                 <Cpu className="w-6 h-6" />
               </div>
               <h3 className="font-serif font-bold text-[#1f1f1f] text-lg">Filler Tables &amp; Equipment Stands</h3>
@@ -891,10 +887,10 @@ export default function HomePage() {
 
             <Link
               href="/catalog?category=filler_table"
-              className="inline-flex items-center justify-between px-4 py-2.5 rounded-lg bg-[#1f1f1f] hover:bg-[#121212] text-white font-bold text-xs uppercase tracking-wider transition-colors"
+              className="boos-btn-secondary py-2.5 px-4 text-xs"
             >
               <span>Browse 4 Stands</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
             </Link>
           </div>
         </div>
