@@ -16,14 +16,11 @@ import {
   Search,
   Maximize2,
   Award,
-  ChevronRight,
   Plus,
   Check,
   Columns2,
   RotateCcw,
-  LayoutGrid,
-  ChevronDown,
-  ChevronUp,
+  Sparkle,
 } from "lucide-react";
 import { productRepository } from "@/repositories/product-repository";
 import { rankProducts } from "@/domain/decision-engine";
@@ -39,7 +36,7 @@ export default function HomePage() {
   const { addItem, isInProject } = useProjectSchedule();
   const { toggleCompare, isComparing } = useCompareList();
 
-  // Wizard Step State (Clean, non-overwhelming step-by-step up top)
+  // Wizard Step State (Method 1)
   const [wizardStep, setWizardStep] = useState<number>(1);
   const [category, setCategory] = useState<ProductCategory>("compartment_sink");
   const [wallSpace, setWallSpace] = useState<number>(90);
@@ -48,16 +45,22 @@ export default function HomePage() {
   const [drainboardSide, setDrainboardSide] = useState<DrainboardSide>("both");
   const [drainboardLength, setDrainboardLength] = useState<number | null>(18);
   const [tableDepth, setTableDepth] = useState<number>(30);
-  const [tableUpturn, setTableUpturn] = useState<string>("flat");
 
-  // Advanced studio toggle & NL search toggle
-  const [showAdvancedStudio, setShowAdvancedStudio] = useState<boolean>(false);
-  const [showNlSearch, setShowNlSearch] = useState<boolean>(false);
+  // Method 2 (All-in-One Studio State)
+  const [studioCategory, setStudioCategory] = useState<ProductCategory>("compartment_sink");
+  const [studioWallSpace, setStudioWallSpace] = useState<number>(90);
+  const [studioCompartments, setStudioCompartments] = useState<number>(3);
+  const [studioBowlSize, setStudioBowlSize] = useState<string>("16x20");
+  const [studioDrainboardSide, setStudioDrainboardSide] = useState<DrainboardSide>("both");
+  const [studioDrainboardLength, setStudioDrainboardLength] = useState<number | null>(18);
+
+  // Method 3 (Natural Language Search State)
   const [nlQuery, setNlQuery] = useState<string>("");
   const [addedNotice, setAddedNotice] = useState<boolean>(false);
+  const [studioAddedNotice, setStudioAddedNotice] = useState<boolean>(false);
 
-  // Compute live match
-  const liveRequirements = useMemo<Requirements>(() => {
+  // Compute live match for Method 1 (Wizard)
+  const wizardRequirements = useMemo<Requirements>(() => {
     let bw: number | null = null;
     let bf: number | null = null;
     if (bowlSize === "16x20") {
@@ -84,12 +87,43 @@ export default function HomePage() {
     };
   }, [category, wallSpace, compartments, bowlSize, drainboardSide, drainboardLength]);
 
-  const allCategoryProducts = useMemo(() => productRepository.list(category), [category]);
-  const matchResults = useMemo(() => rankProducts(allCategoryProducts, liveRequirements), [allCategoryProducts, liveRequirements]);
+  const wizardCategoryProducts = useMemo(() => productRepository.list(category), [category]);
+  const wizardMatchResults = useMemo(() => rankProducts(wizardCategoryProducts, wizardRequirements), [wizardCategoryProducts, wizardRequirements]);
+  const wizardTopMatch = wizardMatchResults.length > 0 ? wizardMatchResults[0] : null;
 
-  const topMatch = matchResults.length > 0 ? matchResults[0] : null;
+  // Compute live match for Method 2 (Studio)
+  const studioRequirements = useMemo<Requirements>(() => {
+    let bw: number | null = null;
+    let bf: number | null = null;
+    if (studioBowlSize === "16x20") {
+      bw = 16;
+      bf = 20;
+    } else if (studioBowlSize === "18x18") {
+      bw = 18;
+      bf = 18;
+    } else if (studioBowlSize === "20x20") {
+      bw = 20;
+      bf = 20;
+    }
 
-  const handleLaunchFullResults = () => {
+    return {
+      category: studioCategory,
+      maxOverallWidthIn: studioWallSpace || null,
+      compartments: studioCategory === "compartment_sink" ? studioCompartments : null,
+      bowlWidthIn: studioCategory === "compartment_sink" ? bw : null,
+      bowlFrontToBackIn: studioCategory === "compartment_sink" ? bf : null,
+      drainboardSide: studioCategory === "compartment_sink" ? studioDrainboardSide : null,
+      drainboardLengthIn: studioCategory === "compartment_sink" ? studioDrainboardLength : null,
+      exactFitOnly: true,
+      freeTextContext: null,
+    };
+  }, [studioCategory, studioWallSpace, studioCompartments, studioBowlSize, studioDrainboardSide, studioDrainboardLength]);
+
+  const studioCategoryProducts = useMemo(() => productRepository.list(studioCategory), [studioCategory]);
+  const studioMatchResults = useMemo(() => rankProducts(studioCategoryProducts, studioRequirements), [studioCategoryProducts, studioRequirements]);
+  const studioTopMatch = studioMatchResults.length > 0 ? studioMatchResults[0] : null;
+
+  const handleLaunchWizardResults = () => {
     const params = new URLSearchParams();
     params.set("category", category);
     if (wallSpace) params.set("maxOverallWidthIn", wallSpace.toString());
@@ -97,520 +131,573 @@ export default function HomePage() {
       params.set("compartments", compartments.toString());
       if (drainboardSide && drainboardSide !== "any") params.set("drainboardSide", drainboardSide);
       if (drainboardLength) params.set("drainboardLengthIn", drainboardLength.toString());
-      if (liveRequirements.bowlWidthIn) params.set("bowlWidthIn", liveRequirements.bowlWidthIn.toString());
-      if (liveRequirements.bowlFrontToBackIn) params.set("bowlFrontToBackIn", liveRequirements.bowlFrontToBackIn.toString());
+      if (wizardRequirements.bowlWidthIn) params.set("bowlWidthIn", wizardRequirements.bowlWidthIn.toString());
+      if (wizardRequirements.bowlFrontToBackIn) params.set("bowlFrontToBackIn", wizardRequirements.bowlFrontToBackIn.toString());
     }
     params.set("exactFitOnly", "true");
     router.push(`/results?${params.toString()}`);
   };
 
-  const handleAddProject = () => {
-    if (!topMatch) return;
-    addItem(topMatch.product, 1);
-    setAddedNotice(true);
-    setTimeout(() => setAddedNotice(false), 2000);
+  const handleLaunchStudioResults = () => {
+    const params = new URLSearchParams();
+    params.set("category", studioCategory);
+    if (studioWallSpace) params.set("maxOverallWidthIn", studioWallSpace.toString());
+    if (studioCategory === "compartment_sink") {
+      params.set("compartments", studioCompartments.toString());
+      if (studioDrainboardSide && studioDrainboardSide !== "any") params.set("drainboardSide", studioDrainboardSide);
+      if (studioDrainboardLength) params.set("drainboardLengthIn", studioDrainboardLength.toString());
+      if (studioRequirements.bowlWidthIn) params.set("bowlWidthIn", studioRequirements.bowlWidthIn.toString());
+      if (studioRequirements.bowlFrontToBackIn) params.set("bowlFrontToBackIn", studioRequirements.bowlFrontToBackIn.toString());
+    }
+    params.set("exactFitOnly", "true");
+    router.push(`/results?${params.toString()}`);
   };
 
   return (
-    <div className="space-y-16 py-2">
-      {/* Top Heritage Badge & Title */}
-      <div className="text-center max-w-3xl mx-auto space-y-3">
+    <div className="space-y-20 py-2">
+      {/* 0. Hero Section: 3 Ways to Find Your Product */}
+      <div className="text-center max-w-4xl mx-auto space-y-4">
         <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white border border-[#d7d4c8] text-xs font-semibold text-[#474235] shadow-2xs">
           <span className="font-serif font-bold text-[#6f2e18]">EST. 1887</span>
           <span>&bull;</span>
           <span className="uppercase tracking-widest text-[11px] font-bold text-[#1f1f1f]">
-            Commercial Foodservice Sizing Engine
+            Commercial Foodservice Specifier
           </span>
         </div>
 
-        <h1 className="text-3xl sm:text-5xl font-serif font-black text-[#1f1f1f] tracking-tight leading-tight">
-          Find Your Perfect Commercial Equipment
+        <h1 className="text-3xl sm:text-6xl font-serif font-black text-[#1f1f1f] tracking-tight leading-none">
+          3 Ways to Find Your Product
         </h1>
-        <p className="text-xs sm:text-base text-[#5c5645] max-w-xl mx-auto">
-          Follow our 4-step guided configurator to size your space and resolve verified John Boos models with full clearance validation.
+        <p className="text-sm sm:text-lg text-[#5c5645] max-w-2xl mx-auto leading-relaxed">
+          Choose the workflow that fits your needs: step through our guided wizard, use the live all-in-one studio matrix, or describe your space in plain English.
         </p>
-      </div>
 
-      {/* 1. UP TOP: Clean, Focused Step-by-Step Guided Wizard (Not Overwhelming) */}
-      <div className="max-w-3xl mx-auto bg-white border-2 border-[#1f1f1f] rounded-3xl shadow-xl overflow-hidden">
-        {/* Wizard Header Progress Bar */}
-        <div className="bg-[#fcfbf9] border-b border-[#e5e5e2] px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <span className="w-6 h-6 rounded-full bg-[#6f2e18] text-white text-xs font-mono font-bold flex items-center justify-center">
-                {wizardStep}
-              </span>
-              <span className="text-xs font-bold uppercase tracking-wider text-[#1f1f1f]">
-                {wizardStep === 1 && "Step 1 of 4: Select Product Line"}
-                {wizardStep === 2 && "Step 2 of 4: Available Installation Space"}
-                {wizardStep === 3 && (category === "compartment_sink" ? "Step 3 of 4: Compartment & Bowl Size" : "Step 3 of 4: Surface & Depth")}
-                {wizardStep === 4 && (category === "compartment_sink" ? "Step 4 of 4: Drainboard Configuration" : "Step 4 of 4: Review & Model Resolution")}
-                {wizardStep === 5 && "Verified Model Match"}
-              </span>
-            </div>
-
-            {/* Step Pills */}
-            <div className="flex items-center space-x-1.5">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setWizardStep(s)}
-                  className={`w-3 h-3 rounded-full transition-all ${
-                    wizardStep === s
-                      ? "bg-[#6f2e18] scale-125 ring-2 ring-[#6f2e18]/20"
-                      : wizardStep > s
-                      ? "bg-[#1f1f1f]"
-                      : "bg-[#d7d4c8]"
-                  }`}
-                  title={`Go to Step ${s}`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Wizard Step Body */}
-        <div className="p-6 sm:p-10 min-h-[340px] flex flex-col justify-between space-y-6">
-          {/* STEP 1: Select Category */}
-          {wizardStep === 1 && (
-            <div className="space-y-5 my-auto">
-              <div className="text-center sm:text-left space-y-1">
-                <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#1f1f1f]">
-                  What type of commercial equipment do you need?
-                </h2>
-                <p className="text-xs text-[#756e5a]">
-                  Choose from John Boos commercial product families.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {[
-                  {
-                    id: "compartment_sink",
-                    title: "Compartment Sinks",
-                    sub: "1 to 4-Bay B-Series stainless sinks with drainboards",
-                    icon: Box,
-                  },
-                  {
-                    id: "work_table",
-                    title: "Work Tables",
-                    sub: "FBLG, UFBLG, ST6 16GA, and JNS Maple wood tops",
-                    icon: Layers2,
-                  },
-                  {
-                    id: "filler_table",
-                    title: "Fillers & Stands",
-                    sub: "EFT8 narrow filler tables and EES8 heavy equipment stands",
-                    icon: Cpu,
-                  },
-                ].map((item) => {
-                  const Icon = item.icon;
-                  const isSelected = category === item.id;
-                  return (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => setCategory(item.id as ProductCategory)}
-                      className={`p-5 rounded-2xl border-2 text-left transition-all flex flex-col justify-between ${
-                        isSelected
-                          ? "bg-[#fbf2ee] border-[#6f2e18] ring-4 ring-[#6f2e18]/10 shadow-sm"
-                          : "bg-white border-[#e5e5e2] hover:border-[#b8b3a0]"
-                      }`}
-                    >
-                      <Icon className={`w-8 h-8 mb-3 ${isSelected ? "text-[#6f2e18]" : "text-[#756e5a]"}`} />
-                      <div>
-                        <span className="font-bold text-sm text-[#1f1f1f] block mb-1">
-                          {item.title}
-                        </span>
-                        <p className="text-[11px] text-[#5c5645] leading-relaxed">
-                          {item.sub}
-                        </p>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* STEP 2: Wall Space & Clearance */}
-          {wizardStep === 2 && (
-            <div className="space-y-6 my-auto">
-              <div className="text-center sm:text-left space-y-1">
-                <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#1f1f1f]">
-                  How much wall or floor space is available?
-                </h2>
-                <p className="text-xs text-[#756e5a]">
-                  Select a common standard dimension or adjust the slider.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {[
-                  { val: 60, label: "60 inches", sub: "5.0 ft (Compact)" },
-                  { val: 76, label: "76 inches", sub: "6.3 ft (Single Board)" },
-                  { val: 87, label: "87 inches", sub: "7.25 ft (Exact 3-Bay)" },
-                  { val: 90, label: "90 inches", sub: "7.5 ft (Hero Station)" },
-                  { val: 99, label: "99 inches", sub: "8.25 ft (Extended)" },
-                  { val: 105, label: "105 inches", sub: "8.75 ft (Large)" },
-                  { val: 111, label: "111 inches", sub: "9.25 ft (30\" Boards)" },
-                  { val: 120, label: "120 inches", sub: "10.0 ft (Full Station)" },
-                ].map((item) => (
-                  <button
-                    key={item.val}
-                    type="button"
-                    onClick={() => setWallSpace(item.val)}
-                    className={`p-3.5 rounded-xl border text-left transition-all ${
-                      wallSpace === item.val
-                        ? "bg-[#fbf2ee] border-[#6f2e18] ring-2 ring-[#6f2e18]/20 font-bold"
-                        : "bg-white border-[#e5e5e2] hover:border-[#b8b3a0]"
-                    }`}
-                  >
-                    <span className="font-mono text-sm font-bold text-[#1f1f1f] block">
-                      {item.label}
-                    </span>
-                    <span className="text-[10px] text-[#756e5a]">{item.sub}</span>
-                  </button>
-                ))}
-              </div>
-
-              {/* Slider option */}
-              <div className="p-4 rounded-2xl bg-[#fcfbf9] border border-[#e5e5e2] space-y-2">
-                <div className="flex justify-between items-center text-xs">
-                  <span className="font-bold text-[#1f1f1f]">Fine-Tune Custom Width:</span>
-                  <span className="font-mono font-black text-sm text-[#6f2e18]">{wallSpace}&quot; ({(wallSpace / 12).toFixed(1)} ft)</span>
-                </div>
-                <input
-                  type="range"
-                  min="20"
-                  max="125"
-                  value={wallSpace}
-                  onChange={(e) => setWallSpace(parseInt(e.target.value))}
-                  className="w-full h-2 bg-[#d7d4c8] rounded-lg appearance-none cursor-pointer accent-[#6f2e18]"
-                />
-              </div>
-            </div>
-          )}
-
-          {/* STEP 3: Compartments & Bowl Footprint (or Depth for Tables) */}
-          {wizardStep === 3 && (
-            <div className="space-y-6 my-auto">
-              {category === "compartment_sink" ? (
-                <>
-                  <div className="text-center sm:text-left space-y-1">
-                    <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#1f1f1f]">
-                      Choose your compartment count &amp; bowl footprint
-                    </h2>
-                    <p className="text-xs text-[#756e5a]">
-                      All commercial sink bowls are heavy-duty 14&quot; water depth with 10&quot; boxed backsplash.
-                    </p>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <span className="text-xs font-bold uppercase tracking-wider text-[#1f1f1f] block mb-2">
-                        Compartments:
-                      </span>
-                      <div className="grid grid-cols-4 gap-3">
-                        {[
-                          { num: 1, title: "1-Bay", sub: "Prep / Hand" },
-                          { num: 2, title: "2-Bay", sub: "Wash & Rinse" },
-                          { num: 3, title: "3-Bay", sub: "Wash/Rinse/Sanitize" },
-                          { num: 4, title: "4-Bay", sub: "Commercial Soak" },
-                        ].map((item) => (
-                          <button
-                            key={item.num}
-                            type="button"
-                            onClick={() => setCompartments(item.num)}
-                            className={`p-3 rounded-xl border text-center transition-all ${
-                              compartments === item.num
-                                ? "bg-[#fbf2ee] border-[#6f2e18] ring-2 ring-[#6f2e18]/20 font-bold"
-                                : "bg-white border-[#e5e5e2] hover:border-[#b8b3a0]"
-                            }`}
-                          >
-                            <span className="font-mono text-sm font-bold text-[#1f1f1f] block">
-                              {item.title}
-                            </span>
-                            <span className="text-[10px] text-[#756e5a] block">{item.sub}</span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <span className="text-xs font-bold uppercase tracking-wider text-[#1f1f1f] block mb-2">
-                        Bowl Dimensions:
-                      </span>
-                      <div className="grid grid-cols-3 gap-3">
-                        {[
-                          { id: "16x20", label: "16\" W x 20\" D", sub: "Standard B-Series commercial pans" },
-                          { id: "18x18", label: "18\" W x 18\" D", sub: "Square high-capacity compartments" },
-                          { id: "20x20", label: "20\" W x 20\" D", sub: "Extra-large utility station" },
-                        ].map((item) => (
-                          <button
-                            key={item.id}
-                            type="button"
-                            onClick={() => setBowlSize(item.id)}
-                            className={`p-3 rounded-xl border text-left transition-all ${
-                              bowlSize === item.id
-                                ? "bg-[#fbf2ee] border-[#6f2e18] ring-2 ring-[#6f2e18]/20"
-                                : "bg-white border-[#e5e5e2] hover:border-[#b8b3a0]"
-                            }`}
-                          >
-                            <span className="font-mono text-xs font-bold text-[#1f1f1f] block mb-0.5">
-                              {item.label}
-                            </span>
-                            <span className="text-[10px] text-[#756e5a] leading-tight block">{item.sub}</span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <div className="space-y-4">
-                  <div className="text-center sm:text-left space-y-1">
-                    <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#1f1f1f]">
-                      Choose table depth &amp; up-turn style
-                    </h2>
-                    <p className="text-xs text-[#756e5a]">
-                      Select front-to-back work surface depth.
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <button
-                      type="button"
-                      onClick={() => setTableDepth(30)}
-                      className={`p-4 rounded-xl border text-left ${
-                        tableDepth === 30 ? "bg-[#fbf2ee] border-[#6f2e18] ring-2 ring-[#6f2e18]/20" : "bg-white border-[#e5e5e2]"
-                      }`}
-                    >
-                      <span className="font-bold text-sm text-[#1f1f1f] block">30&quot; Standard Depth</span>
-                      <span className="text-xs text-[#756e5a]">Standard commercial chef line depth</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setTableDepth(24)}
-                      className={`p-4 rounded-xl border text-left ${
-                        tableDepth === 24 ? "bg-[#fbf2ee] border-[#6f2e18] ring-2 ring-[#6f2e18]/20" : "bg-white border-[#e5e5e2]"
-                      }`}
-                    >
-                      <span className="font-bold text-sm text-[#1f1f1f] block">24&quot; Compact Depth</span>
-                      <span className="text-xs text-[#756e5a]">Narrow kitchen aisle clearance</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* STEP 4: Drainboard Orientation & Sizing */}
-          {wizardStep === 4 && (
-            <div className="space-y-6 my-auto">
-              <div className="text-center sm:text-left space-y-1">
-                <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#1f1f1f]">
-                  Select drainboard layout &amp; length
-                </h2>
-                <p className="text-xs text-[#756e5a]">
-                  Position your dirty dish landing and clean drying surfaces.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {[
-                  { id: "both", label: "Both Sides (L+R)", sub: "2 Drainboards" },
-                  { id: "left", label: "Left Side Only", sub: "1 LH Drainboard" },
-                  { id: "right", label: "Right Side Only", sub: "1 RH Drainboard" },
-                  { id: "none", label: "No Drainboards", sub: "Compact Sinks" },
-                ].map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => setDrainboardSide(item.id as DrainboardSide)}
-                    className={`p-4 rounded-xl border text-left transition-all ${
-                      drainboardSide === item.id
-                        ? "bg-[#fbf2ee] border-[#6f2e18] ring-2 ring-[#6f2e18]/20 font-bold"
-                        : "bg-white border-[#e5e5e2] text-[#474235] hover:border-[#b8b3a0]"
-                    }`}
-                  >
-                    <span className="font-bold text-xs text-[#1f1f1f] block mb-1">
-                      {item.label}
-                    </span>
-                    <span className="text-[10px] text-[#756e5a]">{item.sub}</span>
-                  </button>
-                ))}
-              </div>
-
-              {drainboardSide !== "none" && (
-                <div className="p-4 rounded-2xl bg-[#fcfbf9] border border-[#e5e5e2] space-y-2">
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#1f1f1f] block font-sans">
-                    Drainboard Length:
-                  </span>
-                  <div className="flex gap-3">
-                    {[
-                      { val: 18, label: "18\" Standard Length" },
-                      { val: 24, label: "24\" Extended Length" },
-                      { val: 30, label: "30\" Extra-Wide Length" },
-                    ].map((len) => (
-                      <button
-                        key={len.val}
-                        type="button"
-                        onClick={() => setDrainboardLength(len.val)}
-                        className={`px-4 py-2 rounded-full text-xs font-mono font-bold transition-all ${
-                          drainboardLength === len.val
-                            ? "bg-[#6f2e18] text-white shadow-xs"
-                            : "bg-white text-[#5c5645] hover:bg-[#e8e6df] border border-[#d7d4c8]"
-                        }`}
-                      >
-                        {len.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* STEP 5: Instant Live Resolution & Match Preview */}
-          {wizardStep === 5 && (
-            <div className="space-y-6 my-auto">
-              {topMatch ? (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between border-b border-[#e5e5e2] pb-3">
-                    <div className="flex items-center space-x-2">
-                      <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 text-xs font-bold uppercase tracking-wider flex items-center space-x-1.5">
-                        <Award className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>Exact Match Resolved</span>
-                      </span>
-                    </div>
-
-                    <span className="font-mono text-xs text-[#756e5a]">
-                      Score: <span className="font-black text-emerald-700 text-sm">{topMatch.explainability.score}/100</span>
-                    </span>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div>
-                      <Link
-                        href={`/products/${encodeURIComponent(topMatch.product.model)}`}
-                        className="font-mono font-black text-3xl text-[#1f1f1f] hover:text-[#6f2e18] transition-colors block"
-                      >
-                        {topMatch.product.model}
-                      </Link>
-                      <p className="text-xs text-[#756e5a] font-medium">{topMatch.product.family}</p>
-                    </div>
-
-                    <div className="text-right font-mono text-xs text-[#1f1f1f] font-bold">
-                      {topMatch.product.overall.widthIn}&quot; W x {topMatch.product.overall.depthIn}&quot; D x {topMatch.product.overall.heightIn}&quot; H
-                    </div>
-                  </div>
-
-                  {/* Schematic Drawing */}
-                  <div className="p-3 rounded-2xl bg-[#f5f4ef] border border-[#e5e5e2]">
-                    <ProductSchematicSvg product={topMatch.product} className="w-full h-auto max-h-40" />
-                  </div>
-
-                  {/* Clearance Meter */}
-                  <WidthClearanceMeter
-                    productWidth={topMatch.product.overall.widthIn}
-                    maxWallWidth={wallSpace}
-                  />
-                </div>
-              ) : (
-                <div className="p-6 rounded-2xl bg-amber-50 border border-amber-200 text-center space-y-2">
-                  <h3 className="text-lg font-serif font-bold text-amber-950">
-                    Exceeds Available Wall Clearance
-                  </h3>
-                  <p className="text-xs text-amber-900/90 max-w-md mx-auto">
-                    The requested {compartments}-bay configuration with {drainboardLength}&quot; drainboards requires more than {wallSpace}&quot; of width.
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Wizard Step Navigation Buttons */}
-          <div className="pt-4 border-t border-[#e5e5e2] flex items-center justify-between">
-            {wizardStep > 1 ? (
-              <button
-                type="button"
-                onClick={() => setWizardStep(wizardStep - 1)}
-                className="boos-btn-outline px-5 py-2.5 text-xs flex items-center space-x-1.5"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                <span>Back</span>
-              </button>
-            ) : (
-              <span className="text-xs text-[#756e5a] font-mono">Step 1 of 4</span>
-            )}
-
-            {wizardStep < 5 ? (
-              <button
-                type="button"
-                onClick={() => setWizardStep(wizardStep + 1)}
-                className="boos-btn-primary px-7 py-2.5 text-xs flex items-center space-x-1.5"
-              >
-                <span>{wizardStep === 4 ? "Resolve Match" : "Next Step"}</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            ) : (
-              <div className="flex gap-2">
-                <button
-                  onClick={handleAddProject}
-                  className="boos-btn-outline px-5 py-2.5 text-xs flex items-center space-x-1.5"
-                >
-                  {topMatch && isInProject(topMatch.product.id) ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
-                  <span>{addedNotice ? "Saved!" : topMatch && isInProject(topMatch.product.id) ? "In Schedule" : "Add to Project"}</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleLaunchFullResults}
-                  className="boos-btn-primary px-7 py-2.5 text-xs flex items-center space-x-1.5"
-                >
-                  <span>Full Spec View</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            )}
-          </div>
+        {/* Quick Anchor Navigation */}
+        <div className="flex flex-wrap justify-center gap-3 pt-2">
+          <a
+            href="#method-1-wizard"
+            className="boos-btn-outline px-5 py-2 text-xs flex items-center space-x-2"
+          >
+            <span className="w-4 h-4 rounded-full bg-[#6f2e18] text-white text-[10px] flex items-center justify-center font-mono">1</span>
+            <span>Step-by-Step Wizard</span>
+          </a>
+          <a
+            href="#method-2-studio"
+            className="boos-btn-outline px-5 py-2 text-xs flex items-center space-x-2"
+          >
+            <span className="w-4 h-4 rounded-full bg-[#1f1f1f] text-white text-[10px] flex items-center justify-center font-mono">2</span>
+            <span>All-in-One Studio</span>
+          </a>
+          <a
+            href="#method-3-search"
+            className="boos-btn-outline px-5 py-2 text-xs flex items-center space-x-2"
+          >
+            <span className="w-4 h-4 rounded-full bg-[#1f1f1f] text-white text-[10px] flex items-center justify-center font-mono">3</span>
+            <span>Natural Language Search</span>
+          </a>
         </div>
       </div>
 
-      {/* 2. UNDERNEATH: Optional Full Interactive All-in-One Studio Matrix */}
-      <div className="max-w-5xl mx-auto border border-[#e5e5e2] rounded-3xl bg-white overflow-hidden shadow-sm">
-        <button
-          onClick={() => setShowAdvancedStudio(!showAdvancedStudio)}
-          className="w-full px-6 py-5 bg-[#fcfbf9] hover:bg-[#f5f4ef] flex items-center justify-between text-left transition-colors"
-        >
+      {/* METHOD 1: Step-by-Step Guided Wizard (Fully Expanded) */}
+      <section id="method-1-wizard" className="scroll-mt-28 space-y-4">
+        <div className="max-w-4xl mx-auto flex items-center justify-between border-b border-[#e5e5e2] pb-3">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-full bg-[#6f2e18] text-white flex items-center justify-center">
-              <SlidersHorizontal className="w-4 h-4 text-amber-200" />
-            </div>
+            <span className="w-8 h-8 rounded-full bg-[#6f2e18] text-[#fcfbf9] font-mono font-bold text-sm flex items-center justify-center shadow-xs">
+              01
+            </span>
             <div>
-              <h3 className="text-sm font-bold uppercase tracking-wider text-[#1f1f1f] font-sans">
-                All-in-One Studio Control Board
-              </h3>
+              <h2 className="text-xl sm:text-2xl font-serif font-black text-[#1f1f1f]">
+                Method 1: Step-by-Step Guided Wizard
+              </h2>
               <p className="text-xs text-[#756e5a]">
-                Directly adjust all sliders, bowl sizes, and drainboards on a single screen
+                A focused, non-overwhelming step-by-step sizing experience with instant model resolution.
               </p>
             </div>
           </div>
+          <span className="hidden sm:inline-block text-[11px] font-mono font-bold uppercase text-[#6f2e18] bg-[#fbf2ee] px-3 py-1 rounded-full border border-[#6f2e18]/20">
+            Recommended for Beginners
+          </span>
+        </div>
 
-          <div className="flex items-center space-x-2 text-xs font-bold text-[#6f2e18] uppercase tracking-wider font-sans">
-            <span>{showAdvancedStudio ? "Collapse Studio" : "Expand All-in-One Studio"}</span>
-            {showAdvancedStudio ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        <div className="max-w-4xl mx-auto bg-white border-2 border-[#1f1f1f] rounded-3xl shadow-xl overflow-hidden">
+          {/* Wizard Header Progress Bar */}
+          <div className="bg-[#fcfbf9] border-b border-[#e5e5e2] px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <span className="w-6 h-6 rounded-full bg-[#6f2e18] text-white text-xs font-mono font-bold flex items-center justify-center">
+                  {wizardStep}
+                </span>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#1f1f1f] font-sans">
+                  {wizardStep === 1 && "Step 1 of 4: Select Product Line"}
+                  {wizardStep === 2 && "Step 2 of 4: Available Installation Space"}
+                  {wizardStep === 3 && (category === "compartment_sink" ? "Step 3 of 4: Compartments & Bowl Size" : "Step 3 of 4: Table Depth & Style")}
+                  {wizardStep === 4 && (category === "compartment_sink" ? "Step 4 of 4: Drainboard Configuration" : "Step 4 of 4: Review & Model Resolution")}
+                  {wizardStep === 5 && "Verified Model Match"}
+                </span>
+              </div>
+
+              {/* Step Pills */}
+              <div className="flex items-center space-x-1.5">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setWizardStep(s)}
+                    className={`w-3 h-3 rounded-full transition-all ${
+                      wizardStep === s
+                        ? "bg-[#6f2e18] scale-125 ring-2 ring-[#6f2e18]/20"
+                        : wizardStep > s
+                        ? "bg-[#1f1f1f]"
+                        : "bg-[#d7d4c8]"
+                    }`}
+                    title={`Go to Step ${s}`}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
-        </button>
 
-        {showAdvancedStudio && (
-          <div className="p-6 sm:p-8 border-t border-[#e5e5e2] grid grid-cols-1 lg:grid-cols-12 gap-8 bg-white">
+          {/* Wizard Step Body */}
+          <div className="p-6 sm:p-10 min-h-[340px] flex flex-col justify-between space-y-6">
+            {/* STEP 1: Select Category */}
+            {wizardStep === 1 && (
+              <div className="space-y-5 my-auto">
+                <div className="text-center sm:text-left space-y-1">
+                  <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#1f1f1f]">
+                    What type of commercial equipment do you need?
+                  </h3>
+                  <p className="text-xs text-[#756e5a]">
+                    Choose from John Boos commercial product families.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {[
+                    {
+                      id: "compartment_sink",
+                      title: "Compartment Sinks",
+                      sub: "1 to 4-Bay B-Series stainless sinks with drainboards",
+                      icon: Box,
+                    },
+                    {
+                      id: "work_table",
+                      title: "Work Tables",
+                      sub: "FBLG, UFBLG, ST6 16GA, and JNS Maple wood tops",
+                      icon: Layers2,
+                    },
+                    {
+                      id: "filler_table",
+                      title: "Fillers & Stands",
+                      sub: "EFT8 narrow filler tables and EES8 heavy equipment stands",
+                      icon: Cpu,
+                    },
+                  ].map((item) => {
+                    const Icon = item.icon;
+                    const isSelected = category === item.id;
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => setCategory(item.id as ProductCategory)}
+                        className={`p-5 rounded-2xl border-2 text-left transition-all flex flex-col justify-between ${
+                          isSelected
+                            ? "bg-[#fbf2ee] border-[#6f2e18] ring-4 ring-[#6f2e18]/10 shadow-sm"
+                            : "bg-white border-[#e5e5e2] hover:border-[#b8b3a0]"
+                        }`}
+                      >
+                        <Icon className={`w-8 h-8 mb-3 ${isSelected ? "text-[#6f2e18]" : "text-[#756e5a]"}`} />
+                        <div>
+                          <span className="font-bold text-sm text-[#1f1f1f] block mb-1">
+                            {item.title}
+                          </span>
+                          <p className="text-[11px] text-[#5c5645] leading-relaxed">
+                            {item.sub}
+                          </p>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* STEP 2: Wall Space & Clearance */}
+            {wizardStep === 2 && (
+              <div className="space-y-6 my-auto">
+                <div className="text-center sm:text-left space-y-1">
+                  <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#1f1f1f]">
+                    How much wall or floor space is available?
+                  </h3>
+                  <p className="text-xs text-[#756e5a]">
+                    Select a common standard dimension or adjust the fine-tuning slider.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {[
+                    { val: 60, label: "60 inches", sub: "5.0 ft (Compact)" },
+                    { val: 76, label: "76 inches", sub: "6.3 ft (Single Board)" },
+                    { val: 87, label: "87 inches", sub: "7.25 ft (Exact 3-Bay)" },
+                    { val: 90, label: "90 inches", sub: "7.5 ft (Hero Station)" },
+                    { val: 99, label: "99 inches", sub: "8.25 ft (Extended)" },
+                    { val: 105, label: "105 inches", sub: "8.75 ft (Large)" },
+                    { val: 111, label: "111 inches", sub: "9.25 ft (30\" Boards)" },
+                    { val: 120, label: "120 inches", sub: "10.0 ft (Full Station)" },
+                  ].map((item) => (
+                    <button
+                      key={item.val}
+                      type="button"
+                      onClick={() => setWallSpace(item.val)}
+                      className={`p-3.5 rounded-xl border text-left transition-all ${
+                        wallSpace === item.val
+                          ? "bg-[#fbf2ee] border-[#6f2e18] ring-2 ring-[#6f2e18]/20 font-bold"
+                          : "bg-white border-[#e5e5e2] hover:border-[#b8b3a0]"
+                      }`}
+                    >
+                      <span className="font-mono text-sm font-bold text-[#1f1f1f] block">
+                        {item.label}
+                      </span>
+                      <span className="text-[10px] text-[#756e5a]">{item.sub}</span>
+                    </button>
+                  ))}
+                </div>
+
+                <div className="p-4 rounded-2xl bg-[#fcfbf9] border border-[#e5e5e2] space-y-2">
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="font-bold text-[#1f1f1f]">Fine-Tune Custom Width:</span>
+                    <span className="font-mono font-black text-sm text-[#6f2e18]">{wallSpace}&quot; ({(wallSpace / 12).toFixed(1)} ft)</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="20"
+                    max="125"
+                    value={wallSpace}
+                    onChange={(e) => setWallSpace(parseInt(e.target.value))}
+                    className="w-full h-2 bg-[#d7d4c8] rounded-lg appearance-none cursor-pointer accent-[#6f2e18]"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* STEP 3: Compartments & Bowl Footprint */}
+            {wizardStep === 3 && (
+              <div className="space-y-6 my-auto">
+                {category === "compartment_sink" ? (
+                  <>
+                    <div className="text-center sm:text-left space-y-1">
+                      <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#1f1f1f]">
+                        Choose your compartment count &amp; bowl footprint
+                      </h3>
+                      <p className="text-xs text-[#756e5a]">
+                        All commercial sink bowls are heavy-duty 14&quot; water depth with 10&quot; boxed backsplash.
+                      </p>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <span className="text-xs font-bold uppercase tracking-wider text-[#1f1f1f] block mb-2 font-sans">
+                          Compartments:
+                        </span>
+                        <div className="grid grid-cols-4 gap-3">
+                          {[
+                            { num: 1, title: "1-Bay", sub: "Prep / Hand" },
+                            { num: 2, title: "2-Bay", sub: "Wash & Rinse" },
+                            { num: 3, title: "3-Bay", sub: "Wash/Rinse/Sanitize" },
+                            { num: 4, title: "4-Bay", sub: "Commercial Soak" },
+                          ].map((item) => (
+                            <button
+                              key={item.num}
+                              type="button"
+                              onClick={() => setCompartments(item.num)}
+                              className={`p-3 rounded-xl border text-center transition-all ${
+                                compartments === item.num
+                                  ? "bg-[#fbf2ee] border-[#6f2e18] ring-2 ring-[#6f2e18]/20 font-bold"
+                                  : "bg-white border-[#e5e5e2] hover:border-[#b8b3a0]"
+                              }`}
+                            >
+                              <span className="font-mono text-sm font-bold text-[#1f1f1f] block">
+                                {item.title}
+                              </span>
+                              <span className="text-[10px] text-[#756e5a] block">{item.sub}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <span className="text-xs font-bold uppercase tracking-wider text-[#1f1f1f] block mb-2 font-sans">
+                          Bowl Dimensions:
+                        </span>
+                        <div className="grid grid-cols-3 gap-3">
+                          {[
+                            { id: "16x20", label: "16\" W x 20\" D", sub: "Standard B-Series commercial pans" },
+                            { id: "18x18", label: "18\" W x 18\" D", sub: "Square high-capacity compartments" },
+                            { id: "20x20", label: "20\" W x 20\" D", sub: "Extra-large utility station" },
+                          ].map((item) => (
+                            <button
+                              key={item.id}
+                              type="button"
+                              onClick={() => setBowlSize(item.id)}
+                              className={`p-3 rounded-xl border text-left transition-all ${
+                                bowlSize === item.id
+                                  ? "bg-[#fbf2ee] border-[#6f2e18] ring-2 ring-[#6f2e18]/20"
+                                  : "bg-white border-[#e5e5e2] hover:border-[#b8b3a0]"
+                              }`}
+                            >
+                              <span className="font-mono text-xs font-bold text-[#1f1f1f] block mb-0.5">
+                                {item.label}
+                              </span>
+                              <span className="text-[10px] text-[#756e5a] leading-tight block">{item.sub}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="text-center sm:text-left space-y-1">
+                      <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#1f1f1f]">
+                        Choose table depth &amp; work surface
+                      </h3>
+                      <p className="text-xs text-[#756e5a]">
+                        Select front-to-back work surface depth.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <button
+                        type="button"
+                        onClick={() => setTableDepth(30)}
+                        className={`p-4 rounded-xl border text-left ${
+                          tableDepth === 30 ? "bg-[#fbf2ee] border-[#6f2e18] ring-2 ring-[#6f2e18]/20" : "bg-white border-[#e5e5e2]"
+                        }`}
+                      >
+                        <span className="font-bold text-sm text-[#1f1f1f] block">30&quot; Standard Depth</span>
+                        <span className="text-xs text-[#756e5a]">Standard commercial chef line depth</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setTableDepth(24)}
+                        className={`p-4 rounded-xl border text-left ${
+                          tableDepth === 24 ? "bg-[#fbf2ee] border-[#6f2e18] ring-2 ring-[#6f2e18]/20" : "bg-white border-[#e5e5e2]"
+                        }`}
+                      >
+                        <span className="font-bold text-sm text-[#1f1f1f] block">24&quot; Compact Depth</span>
+                        <span className="text-xs text-[#756e5a]">Narrow kitchen aisle clearance</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* STEP 4: Drainboard Layout */}
+            {wizardStep === 4 && (
+              <div className="space-y-6 my-auto">
+                <div className="text-center sm:text-left space-y-1">
+                  <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#1f1f1f]">
+                    Select drainboard layout &amp; length
+                  </h3>
+                  <p className="text-xs text-[#756e5a]">
+                    Position your dirty dish landing and clean drying surfaces.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {[
+                    { id: "both", label: "Both Sides (L+R)", sub: "2 Drainboards" },
+                    { id: "left", label: "Left Side Only", sub: "1 LH Drainboard" },
+                    { id: "right", label: "Right Side Only", sub: "1 RH Drainboard" },
+                    { id: "none", label: "No Drainboards", sub: "Compact Sinks" },
+                  ].map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => setDrainboardSide(item.id as DrainboardSide)}
+                      className={`p-4 rounded-xl border text-left transition-all ${
+                        drainboardSide === item.id
+                          ? "bg-[#fbf2ee] border-[#6f2e18] ring-2 ring-[#6f2e18]/20 font-bold"
+                          : "bg-white border-[#e5e5e2] text-[#474235] hover:border-[#b8b3a0]"
+                      }`}
+                    >
+                      <span className="font-bold text-xs text-[#1f1f1f] block mb-1">
+                        {item.label}
+                      </span>
+                      <span className="text-[10px] text-[#756e5a]">{item.sub}</span>
+                    </button>
+                  ))}
+                </div>
+
+                {drainboardSide !== "none" && (
+                  <div className="p-4 rounded-2xl bg-[#fcfbf9] border border-[#e5e5e2] space-y-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#1f1f1f] block font-sans">
+                      Drainboard Length:
+                    </span>
+                    <div className="flex gap-3">
+                      {[
+                        { val: 18, label: "18\" Standard Length" },
+                        { val: 24, label: "24\" Extended Length" },
+                        { val: 30, label: "30\" Extra-Wide Length" },
+                      ].map((len) => (
+                        <button
+                          key={len.val}
+                          type="button"
+                          onClick={() => setDrainboardLength(len.val)}
+                          className={`px-4 py-2 rounded-full text-xs font-mono font-bold transition-all ${
+                            drainboardLength === len.val
+                              ? "bg-[#6f2e18] text-white shadow-xs"
+                              : "bg-white text-[#5c5645] hover:bg-[#e8e6df] border border-[#d7d4c8]"
+                          }`}
+                        >
+                          {len.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* STEP 5: Instant Live Resolution */}
+            {wizardStep === 5 && (
+              <div className="space-y-6 my-auto">
+                {wizardTopMatch ? (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between border-b border-[#e5e5e2] pb-3">
+                      <div className="flex items-center space-x-2">
+                        <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 text-xs font-bold uppercase tracking-wider flex items-center space-x-1.5">
+                          <Award className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>Exact Match Resolved</span>
+                        </span>
+                      </div>
+
+                      <span className="font-mono text-xs text-[#756e5a]">
+                        Score: <span className="font-black text-emerald-700 text-sm">{wizardTopMatch.explainability.score}/100</span>
+                      </span>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div>
+                        <Link
+                          href={`/products/${encodeURIComponent(wizardTopMatch.product.model)}`}
+                          className="font-mono font-black text-3xl text-[#1f1f1f] hover:text-[#6f2e18] transition-colors block"
+                        >
+                          {wizardTopMatch.product.model}
+                        </Link>
+                        <p className="text-xs text-[#756e5a] font-medium">{wizardTopMatch.product.family}</p>
+                      </div>
+
+                      <div className="text-right font-mono text-xs text-[#1f1f1f] font-bold">
+                        {wizardTopMatch.product.overall.widthIn}&quot; W x {wizardTopMatch.product.overall.depthIn}&quot; D x {wizardTopMatch.product.overall.heightIn}&quot; H
+                      </div>
+                    </div>
+
+                    {/* Schematic Drawing */}
+                    <div className="p-3 rounded-2xl bg-[#f5f4ef] border border-[#e5e5e2]">
+                      <ProductSchematicSvg product={wizardTopMatch.product} className="w-full h-auto max-h-40" />
+                    </div>
+
+                    {/* Clearance Meter */}
+                    <WidthClearanceMeter
+                      productWidth={wizardTopMatch.product.overall.widthIn}
+                      maxWallWidth={wallSpace}
+                    />
+                  </div>
+                ) : (
+                  <div className="p-6 rounded-2xl bg-amber-50 border border-amber-200 text-center space-y-2">
+                    <h3 className="text-lg font-serif font-bold text-amber-950">
+                      Exceeds Available Wall Clearance
+                    </h3>
+                    <p className="text-xs text-amber-900/90 max-w-md mx-auto">
+                      The requested {compartments}-bay configuration with {drainboardLength}&quot; drainboards requires more than {wallSpace}&quot; of width.
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Wizard Navigation Bar */}
+            <div className="pt-4 border-t border-[#e5e5e2] flex items-center justify-between">
+              {wizardStep > 1 ? (
+                <button
+                  type="button"
+                  onClick={() => setWizardStep(wizardStep - 1)}
+                  className="boos-btn-outline px-5 py-2.5 text-xs flex items-center space-x-1.5"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <span>Back</span>
+                </button>
+              ) : (
+                <span className="text-xs text-[#756e5a] font-mono">Step 1 of 4</span>
+              )}
+
+              {wizardStep < 5 ? (
+                <button
+                  type="button"
+                  onClick={() => setWizardStep(wizardStep + 1)}
+                  className="boos-btn-primary px-7 py-2.5 text-xs flex items-center space-x-1.5"
+                >
+                  <span>{wizardStep === 4 ? "Resolve Match" : "Next Step"}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              ) : (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      if (!wizardTopMatch) return;
+                      addItem(wizardTopMatch.product, 1);
+                      setAddedNotice(true);
+                      setTimeout(() => setAddedNotice(false), 2000);
+                    }}
+                    className="boos-btn-outline px-5 py-2.5 text-xs flex items-center space-x-1.5"
+                  >
+                    {wizardTopMatch && isInProject(wizardTopMatch.product.id) ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+                    <span>{addedNotice ? "Saved!" : wizardTopMatch && isInProject(wizardTopMatch.product.id) ? "In Schedule" : "Add to Project"}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleLaunchWizardResults}
+                    className="boos-btn-primary px-7 py-2.5 text-xs flex items-center space-x-1.5"
+                  >
+                    <span>Full Spec View</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* METHOD 2: All-in-One Studio Control Board (Fully Expanded) */}
+      <section id="method-2-studio" className="scroll-mt-28 space-y-4">
+        <div className="max-w-5xl mx-auto flex items-center justify-between border-b border-[#e5e5e2] pb-3">
+          <div className="flex items-center space-x-3">
+            <span className="w-8 h-8 rounded-full bg-[#1f1f1f] text-[#fcfbf9] font-mono font-bold text-sm flex items-center justify-center shadow-xs">
+              02
+            </span>
+            <div>
+              <h2 className="text-xl sm:text-2xl font-serif font-black text-[#1f1f1f]">
+                Method 2: All-in-One Studio Control Board
+              </h2>
+              <p className="text-xs text-[#756e5a]">
+                Adjust all sliders, bowl sizes, and drainboards simultaneously on a single live screen.
+              </p>
+            </div>
+          </div>
+          <span className="hidden sm:inline-block text-[11px] font-mono font-bold uppercase text-[#1f1f1f] bg-[#f5f4ef] px-3 py-1 rounded-full border border-[#d7d4c8]">
+            For Engineers &amp; Dealer Reps
+          </span>
+        </div>
+
+        <div className="max-w-5xl mx-auto border-2 border-[#1f1f1f] rounded-3xl bg-white overflow-hidden shadow-xl">
+          <div className="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 bg-white">
             {/* Controls Left (7 cols) */}
             <div className="lg:col-span-7 space-y-6">
               {/* Category */}
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-[#1f1f1f]">
+                <label className="text-xs font-bold uppercase tracking-wider text-[#1f1f1f] font-sans">
                   Equipment Category
                 </label>
                 <div className="grid grid-cols-3 gap-2">
@@ -621,11 +708,11 @@ export default function HomePage() {
                   ].map((item) => (
                     <button
                       key={item.id}
-                      onClick={() => setCategory(item.id as ProductCategory)}
-                      className={`p-2 rounded-full text-xs font-bold transition-all ${
-                        category === item.id
-                          ? "bg-[#6f2e18] text-white"
-                          : "bg-[#f5f4ef] text-[#474235] border border-[#d7d4c8]"
+                      onClick={() => setStudioCategory(item.id as ProductCategory)}
+                      className={`p-2.5 rounded-full text-xs font-bold transition-all ${
+                        studioCategory === item.id
+                          ? "bg-[#6f2e18] text-white shadow-xs"
+                          : "bg-[#f5f4ef] text-[#474235] border border-[#d7d4c8] hover:border-[#1f1f1f]"
                       }`}
                     >
                       {item.name}
@@ -637,33 +724,39 @@ export default function HomePage() {
               {/* Slider */}
               <div className="space-y-2">
                 <div className="flex justify-between items-center text-xs font-bold">
-                  <span>Wall Space Width:</span>
-                  <span className="font-mono text-[#6f2e18]">{wallSpace}&quot;</span>
+                  <span className="font-sans">Wall Space Clearance:</span>
+                  <span className="font-mono text-[#6f2e18] text-sm">{studioWallSpace}&quot; ({(studioWallSpace / 12).toFixed(1)} ft)</span>
                 </div>
                 <input
                   type="range"
                   min="20"
                   max="125"
-                  value={wallSpace}
-                  onChange={(e) => setWallSpace(parseInt(e.target.value))}
+                  value={studioWallSpace}
+                  onChange={(e) => setStudioWallSpace(parseInt(e.target.value))}
                   className="w-full h-2 bg-[#d7d4c8] rounded-lg accent-[#6f2e18]"
                 />
+                <div className="flex justify-between text-[10px] font-mono text-[#756e5a]">
+                  <span>20&quot; (Compact)</span>
+                  <span>60&quot; (Medium)</span>
+                  <span>90&quot; (Hero Standard)</span>
+                  <span>120&quot;+ (Full Station)</span>
+                </div>
               </div>
 
               {/* Compartments & Bowls */}
-              {category === "compartment_sink" && (
+              {studioCategory === "compartment_sink" && (
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-[#1f1f1f]">
+                    <label className="text-xs font-bold uppercase tracking-wider text-[#1f1f1f] font-sans">
                       Compartments
                     </label>
                     <div className="grid grid-cols-4 gap-1">
                       {[1, 2, 3, 4].map((num) => (
                         <button
                           key={num}
-                          onClick={() => setCompartments(num)}
-                          className={`py-1.5 rounded-full text-xs font-bold ${
-                            compartments === num ? "bg-[#6f2e18] text-white" : "bg-[#f5f4ef] border border-[#d7d4c8]"
+                          onClick={() => setStudioCompartments(num)}
+                          className={`py-2 rounded-full text-xs font-bold ${
+                            studioCompartments === num ? "bg-[#6f2e18] text-white" : "bg-[#f5f4ef] border border-[#d7d4c8]"
                           }`}
                         >
                           {num}B
@@ -673,7 +766,7 @@ export default function HomePage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-[#1f1f1f]">
+                    <label className="text-xs font-bold uppercase tracking-wider text-[#1f1f1f] font-sans">
                       Bowl Size
                     </label>
                     <div className="grid grid-cols-2 gap-1">
@@ -683,9 +776,9 @@ export default function HomePage() {
                       ].map((item) => (
                         <button
                           key={item.id}
-                          onClick={() => setBowlSize(item.id)}
-                          className={`py-1.5 rounded-full text-xs font-mono font-bold ${
-                            bowlSize === item.id ? "bg-[#1f1f1f] text-white" : "bg-[#f5f4ef] border border-[#d7d4c8]"
+                          onClick={() => setStudioBowlSize(item.id)}
+                          className={`py-2 rounded-full text-xs font-mono font-bold ${
+                            studioBowlSize === item.id ? "bg-[#1f1f1f] text-white" : "bg-[#f5f4ef] border border-[#d7d4c8]"
                           }`}
                         >
                           {item.label}
@@ -696,10 +789,10 @@ export default function HomePage() {
                 </div>
               )}
 
-              {/* Drainboard */}
-              {category === "compartment_sink" && (
+              {/* Drainboards */}
+              {studioCategory === "compartment_sink" && (
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#1f1f1f]">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#1f1f1f] font-sans">
                     Drainboards
                   </label>
                   <div className="grid grid-cols-4 gap-1.5 text-xs">
@@ -711,9 +804,9 @@ export default function HomePage() {
                     ].map((item) => (
                       <button
                         key={item.id}
-                        onClick={() => setDrainboardSide(item.id as DrainboardSide)}
+                        onClick={() => setStudioDrainboardSide(item.id as DrainboardSide)}
                         className={`py-2 rounded-full font-bold ${
-                          drainboardSide === item.id ? "bg-[#6f2e18] text-white" : "bg-[#f5f4ef] border border-[#d7d4c8]"
+                          studioDrainboardSide === item.id ? "bg-[#6f2e18] text-white" : "bg-[#f5f4ef] border border-[#d7d4c8]"
                         }`}
                       >
                         {item.label}
@@ -725,105 +818,127 @@ export default function HomePage() {
             </div>
 
             {/* Live Model Right (5 cols) */}
-            <div className="lg:col-span-5 bg-[#fcfbf9] p-5 rounded-2xl border border-[#e5e5e2] space-y-4">
-              {topMatch ? (
+            <div className="lg:col-span-5 bg-[#fcfbf9] p-6 rounded-2xl border border-[#e5e5e2] flex flex-col justify-between space-y-4">
+              {studioTopMatch ? (
                 <>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                      Exact Match
-                    </span>
-                    <span className="font-mono text-xs font-bold">{topMatch.product.model}</span>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-0.5 rounded-full border border-emerald-200">
+                        Exact Match Resolved
+                      </span>
+                      <span className="font-mono text-xs font-black text-[#1f1f1f]">{studioTopMatch.product.model}</span>
+                    </div>
+                    <ProductSchematicSvg product={studioTopMatch.product} className="w-full h-auto max-h-40" />
+                    <WidthClearanceMeter productWidth={studioTopMatch.product.overall.widthIn} maxWallWidth={studioWallSpace} />
                   </div>
-                  <ProductSchematicSvg product={topMatch.product} className="w-full h-auto max-h-36" />
-                  <WidthClearanceMeter productWidth={topMatch.product.overall.widthIn} maxWallWidth={wallSpace} />
-                  <button
-                    onClick={handleLaunchFullResults}
-                    className="boos-btn-primary w-full py-2.5 text-xs"
-                  >
-                    View Recommendation Details
-                  </button>
+
+                  <div className="space-y-2 pt-2">
+                    <button
+                      onClick={handleLaunchStudioResults}
+                      className="boos-btn-primary w-full py-2.5 text-xs"
+                    >
+                      View Recommendation Details
+                    </button>
+                    <button
+                      onClick={() => {
+                        addItem(studioTopMatch.product, 1);
+                        setStudioAddedNotice(true);
+                        setTimeout(() => setStudioAddedNotice(false), 2000);
+                      }}
+                      className="boos-btn-outline w-full py-2 text-xs flex items-center justify-center space-x-1.5"
+                    >
+                      {isInProject(studioTopMatch.product.id) ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+                      <span>{studioAddedNotice ? "Saved to Project!" : isInProject(studioTopMatch.product.id) ? "In Schedule" : "Add to Project"}</span>
+                    </button>
+                  </div>
                 </>
               ) : (
-                <div className="text-xs text-amber-900 py-6 text-center">
-                  Exceeds wall space limit
+                <div className="text-xs text-amber-900 py-12 text-center space-y-2 my-auto">
+                  <span className="font-bold text-sm block">Exceeds Wall Space</span>
+                  <p className="text-[#756e5a]">Adjust wall clearance slider to resolve standard models.</p>
                 </div>
               )}
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      </section>
 
-      {/* 3. UNDERNEATH: Plain English Natural Language Search Drawer */}
-      <div className="max-w-5xl mx-auto bg-[#fcfbf9] border border-[#e5e5e2] rounded-3xl p-6 sm:p-8 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      {/* METHOD 3: Natural Language Search (Fully Expanded) */}
+      <section id="method-3-search" className="scroll-mt-28 space-y-4">
+        <div className="max-w-5xl mx-auto flex items-center justify-between border-b border-[#e5e5e2] pb-3">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-full bg-white border border-[#d7d4c8] flex items-center justify-center text-[#6f2e18]">
-              <Search className="w-4 h-4" />
-            </div>
+            <span className="w-8 h-8 rounded-full bg-[#1f1f1f] text-[#fcfbf9] font-mono font-bold text-sm flex items-center justify-center shadow-xs">
+              03
+            </span>
             <div>
-              <h3 className="text-sm font-bold uppercase tracking-wider text-[#1f1f1f] font-sans">
-                Natural Language Query Option
-              </h3>
+              <h2 className="text-xl sm:text-2xl font-serif font-black text-[#1f1f1f]">
+                Method 3: Natural Language Spatial Search
+              </h2>
               <p className="text-xs text-[#756e5a]">
-                Type custom contractor requirements in plain English or select a demonstration preset
+                Type custom contractor requirements in plain English or select a demonstration preset.
               </p>
             </div>
           </div>
-
-          <button
-            onClick={() => setShowNlSearch(!showNlSearch)}
-            className="text-xs font-bold text-[#6f2e18] hover:underline uppercase tracking-wider font-sans"
-          >
-            {showNlSearch ? "Hide Text Input" : "Open Search Box"}
-          </button>
+          <span className="hidden sm:inline-block text-[11px] font-mono font-bold uppercase text-[#1f1f1f] bg-[#f5f4ef] px-3 py-1 rounded-full border border-[#d7d4c8]">
+            Freeform Contractor Query
+          </span>
         </div>
 
-        {showNlSearch && (
+        <div className="max-w-5xl mx-auto bg-[#fcfbf9] border-2 border-[#1f1f1f] rounded-3xl p-6 sm:p-10 space-y-6 shadow-xl">
           <form
             onSubmit={(e) => {
               e.preventDefault();
               if (nlQuery.trim()) router.push(`/results?q=${encodeURIComponent(nlQuery.trim())}`);
             }}
-            className="space-y-3 pt-2"
+            className="space-y-4"
           >
-            <div className="flex flex-col sm:flex-row gap-2 bg-white p-2 rounded-full border border-[#d7d4c8] shadow-sm">
-              <input
-                type="text"
-                value={nlQuery}
-                onChange={(e) => setNlQuery(e.target.value)}
-                placeholder="e.g. 90 inches wall space, 3 compartment sink with 18 inch drainboards on both sides..."
-                className="w-full bg-transparent px-4 py-2 text-sm text-[#1f1f1f] placeholder-[#948d77] focus:outline-none"
-              />
+            <div className="flex flex-col sm:flex-row gap-3 bg-white p-2.5 rounded-full border-2 border-[#1f1f1f] shadow-md focus-within:border-[#6f2e18] transition-all">
+              <div className="relative flex-1 flex items-center pl-3">
+                <Search className="w-5 h-5 text-[#6f2e18] mr-3 flex-shrink-0" />
+                <input
+                  type="text"
+                  value={nlQuery}
+                  onChange={(e) => setNlQuery(e.target.value)}
+                  placeholder="e.g. 90 inches wall space, 3 compartment sink with 18 inch drainboards on both sides..."
+                  className="w-full bg-transparent text-sm text-[#1f1f1f] placeholder-[#948d77] focus:outline-none font-medium"
+                />
+              </div>
               <button
                 type="submit"
-                className="boos-btn-primary px-6 py-2 text-xs"
+                className="boos-btn-primary px-8 py-3 text-xs flex-shrink-0"
               >
-                Find Matches
+                <span>Find Matches</span>
+                <ArrowRight className="w-4 h-4 ml-1.5" />
               </button>
             </div>
 
-            <div className="flex flex-wrap gap-2 pt-1">
-              <span className="text-[11px] font-bold text-[#756e5a] mr-1 self-center">Demo Presets:</span>
-              {demoScenarios.map((s) => (
-                <button
-                  key={s.id}
-                  type="button"
-                  onClick={() => router.push(`/results?q=${encodeURIComponent(s.input)}`)}
-                  className="px-3 py-1 rounded-full bg-white hover:bg-[#f5f4ef] border border-[#d7d4c8] text-[11px] text-[#474235] font-mono"
-                >
-                  [{s.title}]
-                </button>
-              ))}
+            {/* Clickable Benchmark Presets */}
+            <div className="pt-2">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#756e5a] block mb-2 font-sans">
+                Demonstration Benchmark Preset Queries:
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {demoScenarios.map((s) => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => router.push(`/results?q=${encodeURIComponent(s.input)}`)}
+                    className="px-3.5 py-1.5 rounded-full bg-white hover:bg-[#f5f4ef] border border-[#d7d4c8] hover:border-[#6f2e18] text-xs text-[#1f1f1f] font-semibold transition-all shadow-2xs flex items-center space-x-1.5"
+                  >
+                    <span className="font-mono text-[#6f2e18] text-[11px] font-bold">[{s.title}]</span>
+                  </button>
+                ))}
+              </div>
             </div>
           </form>
-        )}
-      </div>
+        </div>
+      </section>
 
       {/* 4. Commercial Product Line Collection Cards */}
-      <div className="space-y-6 pt-2">
+      <section className="space-y-6 pt-6">
         <div className="border-b border-[#e5e5e2] pb-4">
           <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#6f2e18] block">
-            Commercial Lines
+            Commercial Families
           </span>
           <h2 className="text-2xl sm:text-3xl font-serif font-black text-[#1f1f1f] tracking-tight">
             Explore Boos Steel™ Commercial Truth-Set
@@ -832,12 +947,12 @@ export default function HomePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Sinks Card */}
-          <div className="rounded-2xl border border-[#e5e5e2] bg-white p-6 flex flex-col justify-between space-y-4 hover:border-[#6f2e18] transition-all shadow-xs">
-            <div className="space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-[#f5f4ef] border border-[#d7d4c8] flex items-center justify-center text-[#6f2e18]">
-                <Box className="w-6 h-6" />
+          <div className="rounded-3xl border border-[#e5e5e2] bg-white p-7 flex flex-col justify-between space-y-5 hover:border-[#6f2e18] transition-all shadow-xs">
+            <div className="space-y-4">
+              <div className="w-14 h-14 rounded-2xl bg-[#f5f4ef] border border-[#d7d4c8] flex items-center justify-center text-[#6f2e18]">
+                <Box className="w-7 h-7" />
               </div>
-              <h3 className="font-serif font-bold text-[#1f1f1f] text-lg">B-Series Compartment Sinks</h3>
+              <h3 className="font-serif font-bold text-[#1f1f1f] text-xl">B-Series Compartment Sinks</h3>
               <p className="text-xs text-[#5c5645] leading-relaxed">
                 1 to 4-bay commercial sinks with 0, 1, or 2 drainboards in 18&quot;, 24&quot;, and 30&quot; lengths with 10&quot; boxed backsplashes.
               </p>
@@ -845,20 +960,20 @@ export default function HomePage() {
 
             <Link
               href="/catalog?category=compartment_sink"
-              className="boos-btn-primary py-2.5 px-4 text-xs"
+              className="boos-btn-primary py-3 px-5 text-xs"
             >
               <span>Browse 14 Sinks</span>
-              <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+              <ArrowRight className="w-4 h-4 ml-1.5" />
             </Link>
           </div>
 
           {/* Work Tables Card */}
-          <div className="rounded-2xl border border-[#e5e5e2] bg-white p-6 flex flex-col justify-between space-y-4 hover:border-[#b8b3a0] transition-all shadow-xs">
-            <div className="space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-[#f5f4ef] border border-[#d7d4c8] flex items-center justify-center text-[#1f1f1f]">
-                <Layers2 className="w-6 h-6" />
+          <div className="rounded-3xl border border-[#e5e5e2] bg-white p-7 flex flex-col justify-between space-y-5 hover:border-[#b8b3a0] transition-all shadow-xs">
+            <div className="space-y-4">
+              <div className="w-14 h-14 rounded-2xl bg-[#f5f4ef] border border-[#d7d4c8] flex items-center justify-center text-[#1f1f1f]">
+                <Layers2 className="w-7 h-7" />
               </div>
-              <h3 className="font-serif font-bold text-[#1f1f1f] text-lg">Commercial Work Tables</h3>
+              <h3 className="font-serif font-bold text-[#1f1f1f] text-xl">Commercial Work Tables</h3>
               <p className="text-xs text-[#5c5645] leading-relaxed">
                 FBLG economy flat-top tables, UFBLG 1.5&quot; rear up-turn tables, ST6 heavy-duty 16GA chef stations, and JNS Hard Rock Maple wood tops.
               </p>
@@ -866,20 +981,20 @@ export default function HomePage() {
 
             <Link
               href="/catalog?category=work_table"
-              className="boos-btn-secondary py-2.5 px-4 text-xs"
+              className="boos-btn-secondary py-3 px-5 text-xs"
             >
               <span>Browse 11 Tables</span>
-              <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+              <ArrowRight className="w-4 h-4 ml-1.5" />
             </Link>
           </div>
 
           {/* Filler Tables & Stands */}
-          <div className="rounded-2xl border border-[#e5e5e2] bg-white p-6 flex flex-col justify-between space-y-4 hover:border-[#b8b3a0] transition-all shadow-xs">
-            <div className="space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-[#f5f4ef] border border-[#d7d4c8] flex items-center justify-center text-[#1f1f1f]">
-                <Cpu className="w-6 h-6" />
+          <div className="rounded-3xl border border-[#e5e5e2] bg-white p-7 flex flex-col justify-between space-y-5 hover:border-[#b8b3a0] transition-all shadow-xs">
+            <div className="space-y-4">
+              <div className="w-14 h-14 rounded-2xl bg-[#f5f4ef] border border-[#d7d4c8] flex items-center justify-center text-[#1f1f1f]">
+                <Cpu className="w-7 h-7" />
               </div>
-              <h3 className="font-serif font-bold text-[#1f1f1f] text-lg">Filler Tables &amp; Equipment Stands</h3>
+              <h3 className="font-serif font-bold text-[#1f1f1f] text-xl">Filler Tables &amp; Equipment Stands</h3>
               <p className="text-xs text-[#5c5645] leading-relaxed">
                 EFT8 narrow stainless gap fillers with stallion edges and EES8 heavy commercial stands with 1.5&quot; turned-up equipment lips.
               </p>
@@ -887,14 +1002,14 @@ export default function HomePage() {
 
             <Link
               href="/catalog?category=filler_table"
-              className="boos-btn-secondary py-2.5 px-4 text-xs"
+              className="boos-btn-secondary py-3 px-5 text-xs"
             >
               <span>Browse 4 Stands</span>
-              <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+              <ArrowRight className="w-4 h-4 ml-1.5" />
             </Link>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
