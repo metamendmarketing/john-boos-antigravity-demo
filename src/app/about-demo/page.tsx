@@ -69,21 +69,25 @@ export default function AboutDemoPage() {
           <span>Data Acquisition &amp; Verification Methodology</span>
         </h2>
         <p className="text-xs sm:text-sm text-[#5c5645] leading-relaxed">
-          This demonstration was built without accessing private John Boos systems, dealer portals, or proprietary ERPs. A starter truth-set of 23 representative product models was captured from public specification sheets and distributor listings:
+          This demonstration features a comprehensive, verified commercial truth-set of 139 John Boos product models captured from public specification sheets, NSF registries, and KCL CAD libraries:
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-2">
           <div className="p-4 rounded-xl bg-[#f4f3ef] border border-[#e5e5e2] text-xs">
-            <span className="font-bold text-[#1f1f1f] block mb-1">B-Series 3-Bay Sinks</span>
-            <span className="text-[11px] text-[#756e5a]">8 verified models across 0, 1, and 2 drainboard variants.</span>
+            <span className="font-bold text-[#1f1f1f] block mb-1">Compartment Sinks</span>
+            <span className="text-[11px] text-[#756e5a]">68 models spanning 1, 2, 3, and 4 compartment configurations across all standard bowl sizes and drainboards.</span>
           </div>
           <div className="p-4 rounded-xl bg-[#f4f3ef] border border-[#e5e5e2] text-xs">
-            <span className="font-bold text-[#1f1f1f] block mb-1">Work Tables &amp; Tops</span>
-            <span className="text-[11px] text-[#756e5a]">11 models spanning Cucina Classico, JNS Wood Top, and FBLG/UFBLG.</span>
+            <span className="font-bold text-[#1f1f1f] block mb-1">Commercial Work Tables</span>
+            <span className="text-[11px] text-[#756e5a]">54 models across FBLG flat-top, UFBLG backsplash, FBLS all-stainless, ST6 16GA, and JNS Maple butcher block.</span>
           </div>
           <div className="p-4 rounded-xl bg-[#f4f3ef] border border-[#e5e5e2] text-xs">
-            <span className="font-bold text-[#1f1f1f] block mb-1">Filler Tables &amp; Stands</span>
-            <span className="text-[11px] text-[#756e5a]">4 models covering EFT8 filler tables and EES8 equipment stands.</span>
+            <span className="font-bold text-[#1f1f1f] block mb-1">Filler Tables</span>
+            <span className="text-[11px] text-[#756e5a]">8 models in the EFT8 series for 24 in and 30 in depths from 12 in to 24 in widths.</span>
+          </div>
+          <div className="p-4 rounded-xl bg-[#f4f3ef] border border-[#e5e5e2] text-xs">
+            <span className="font-bold text-[#1f1f1f] block mb-1">Equipment Stands</span>
+            <span className="text-[11px] text-[#756e5a]">9 models across EES8 and EESS8 all-stainless heavy-duty appliance stands.</span>
           </div>
         </div>
       </div>

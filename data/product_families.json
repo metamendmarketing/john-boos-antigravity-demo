@@ -1,5 +1,45 @@
 [
   {
+    "id": "b-series-1comp",
+    "name": "B-Series 1 Compartment Sinks",
+    "category": "compartment_sink",
+    "demo_priority": 1,
+    "supported_fields": [
+      "overall_width_in",
+      "overall_depth_in",
+      "compartments",
+      "bowl_width_in",
+      "bowl_front_to_back_in",
+      "bowl_depth_in",
+      "drainboard_count",
+      "left_drainboard_in",
+      "right_drainboard_in",
+      "top_gauge",
+      "stainless_type"
+    ],
+    "notes": "Single compartment commercial dish, prep, and sanitizing sinks."
+  },
+  {
+    "id": "b-series-2comp",
+    "name": "B-Series 2 Compartment Sinks",
+    "category": "compartment_sink",
+    "demo_priority": 1,
+    "supported_fields": [
+      "overall_width_in",
+      "overall_depth_in",
+      "compartments",
+      "bowl_width_in",
+      "bowl_front_to_back_in",
+      "bowl_depth_in",
+      "drainboard_count",
+      "left_drainboard_in",
+      "right_drainboard_in",
+      "top_gauge",
+      "stainless_type"
+    ],
+    "notes": "Dual compartment commercial washing and rinsing sinks."
+  },
+  {
     "id": "b-series-3comp",
     "name": "B-Series 3 Compartment Sinks",
     "category": "compartment_sink",
@@ -17,11 +57,45 @@
       "top_gauge",
       "stainless_type"
     ],
-    "notes": "Primary decision-engine demo family."
+    "notes": "Primary decision-engine demo family. Standard commercial 3-bay wash-rinse-sanitize sinks."
+  },
+  {
+    "id": "b-series-4comp",
+    "name": "B-Series 4 Compartment Sinks",
+    "category": "compartment_sink",
+    "demo_priority": 1,
+    "supported_fields": [
+      "overall_width_in",
+      "overall_depth_in",
+      "compartments",
+      "bowl_width_in",
+      "bowl_front_to_back_in",
+      "bowl_depth_in",
+      "drainboard_count",
+      "left_drainboard_in",
+      "right_drainboard_in",
+      "top_gauge",
+      "stainless_type"
+    ],
+    "notes": "High volume 4-compartment commercial sinks for scrap-wash-rinse-sanitize operations."
   },
   {
     "id": "fblg",
-    "name": "FBLG / UFBLG Economy Work Tables",
+    "name": "FBLG Economy Work Tables",
+    "category": "work_table",
+    "demo_priority": 2,
+    "supported_fields": [
+      "overall_width_in",
+      "overall_depth_in",
+      "overall_height_in",
+      "top_gauge",
+      "stainless_type"
+    ],
+    "notes": "Flat top 18GA commercial work tables with galvanized legs and adjustable undershelf."
+  },
+  {
+    "id": "ufblg",
+    "name": "UFBLG Economy Work Tables",
     "category": "work_table",
     "demo_priority": 2,
     "supported_fields": [
@@ -32,7 +106,62 @@
       "top_gauge",
       "stainless_type"
     ],
-    "notes": "Secondary browse/filter demo."
+    "notes": "18GA commercial work tables with 5 in rear upturn backsplash."
+  },
+  {
+    "id": "fbls",
+    "name": "FBLS All-Stainless Work Tables",
+    "category": "work_table",
+    "demo_priority": 2,
+    "supported_fields": [
+      "overall_width_in",
+      "overall_depth_in",
+      "overall_height_in",
+      "top_gauge",
+      "stainless_type"
+    ],
+    "notes": "Corrosion-resistant all-stainless steel commercial tables with stainless legs and undershelf."
+  },
+  {
+    "id": "st6",
+    "name": "ST6 Heavy Duty 16GA Work Tables",
+    "category": "work_table",
+    "demo_priority": 2,
+    "supported_fields": [
+      "overall_width_in",
+      "overall_depth_in",
+      "overall_height_in",
+      "top_gauge",
+      "stainless_type"
+    ],
+    "notes": "Heavy duty 16GA Type 300 stainless tables for rigorous commercial kitchen prep."
+  },
+  {
+    "id": "jns",
+    "name": "Wood Top Work Tables (JNS)",
+    "category": "work_table",
+    "demo_priority": 2,
+    "supported_fields": [
+      "overall_width_in",
+      "overall_depth_in",
+      "overall_height_in",
+      "stainless_type"
+    ],
+    "notes": "Authentic John Boos Northern Hard Rock Maple 1.5 in edge-grain butcher block prep tables."
+  },
+  {
+    "id": "cucina",
+    "name": "Stainless Cucina Prep Stations",
+    "category": "work_table",
+    "demo_priority": 2,
+    "supported_fields": [
+      "overall_width_in",
+      "overall_depth_in",
+      "overall_height_in",
+      "top_gauge",
+      "stainless_type"
+    ],
+    "notes": "Cucina Classico and Elegante commercial stainless food preparation tables."
   },
   {
     "id": "eft8",
@@ -43,25 +172,23 @@
       "overall_width_in",
       "overall_depth_in",
       "overall_height_in",
-      "backsplash_in",
       "top_gauge",
       "stainless_type"
     ],
-    "notes": "Secondary browse/filter demo."
+    "notes": "Narrow filler tables to eliminate dead space between cooking line appliances."
   },
   {
     "id": "ees8",
-    "name": "EES8 Equipment Stands",
+    "name": "EES8 & EESS8 Equipment Stands",
     "category": "equipment_stand",
     "demo_priority": 4,
     "supported_fields": [
       "overall_width_in",
       "overall_depth_in",
       "overall_height_in",
-      "backsplash_in",
       "top_gauge",
       "stainless_type"
     ],
-    "notes": "Single product record to show category extensibility."
+    "notes": "Commercial equipment stands with appliance containment lip at ergonomic 24 in height."
   }
 ]
