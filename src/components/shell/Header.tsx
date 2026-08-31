@@ -37,21 +37,21 @@ export const Header: React.FC = () => {
 
   const navLinks = [
     { href: "/", label: "Specifier", icon: Sparkles },
-    { href: "/configure", label: "Sink Configurator", icon: SlidersHorizontal },
-    { href: "/catalog", label: "Commercial Catalog", icon: Layers },
+    { href: "/configure", label: "Configurator", icon: SlidersHorizontal },
+    { href: "/catalog", label: "Catalogue", icon: Layers },
     {
       href: "/compare",
-      label: "Compare Matrix",
+      label: "Compare",
       icon: Columns2,
       badge: compareCount > 0 ? compareCount : null,
     },
     {
       href: "/project",
-      label: "Equipment Schedule",
+      label: "Schedule",
       icon: FolderKanban,
       badge: itemCount > 0 ? itemCount : null,
     },
-    { href: "/about-demo", label: "Heritage & Proof", icon: BookOpen },
+    { href: "/about-demo", label: "Heritage", icon: BookOpen },
   ];
 
   if (pathname === "/login") {
@@ -102,8 +102,8 @@ export const Header: React.FC = () => {
           </Link>
         </div>
 
-        {/* Center: Desktop Navigation - Center-Spaced Icon Button Dock */}
-        <nav className="hidden md:flex items-center justify-center p-1.5 bg-[#eeece5] rounded-full border border-[#dbd6c7] shadow-inner space-x-2">
+        {/* Center: Desktop Navigation - Center-Spaced Pill Button Dock */}
+        <nav className="hidden lg:flex items-center justify-center p-1.5 bg-[#eeece5] rounded-full border border-[#dbd6c7] shadow-inner space-x-1 sm:space-x-1.5">
           {navLinks.map((link) => {
             const Icon = link.icon;
             const isActive = pathname === link.href;
@@ -111,33 +111,29 @@ export const Header: React.FC = () => {
               <Link
                 key={link.href}
                 href={link.href}
-                aria-label={link.label}
-                className={`group relative w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 border ${
+                className={`group px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center space-x-1.5 border ${
                   isActive
-                    ? "bg-[#6f2e18] text-[#fcfbf9] border-[#5a2412] shadow-md hover:bg-[#5a2412]"
-                    : "bg-white/80 text-[#474235] border-transparent hover:bg-white hover:text-[#1f1f1f] hover:border-[#d7d4c8] hover:shadow-xs"
+                    ? "bg-[#6f2e18] text-[#fcfbf9] border-[#5a2412] shadow-sm hover:bg-[#5a2412]"
+                    : "bg-transparent text-[#474235] border-transparent hover:bg-white hover:text-[#1f1f1f] hover:border-[#d7d4c8] hover:shadow-xs"
                 }`}
               >
                 <Icon
-                  className={`w-5 h-5 transition-colors ${
-                    isActive ? "text-amber-300" : "text-[#595343] group-hover:text-[#1f1f1f]"
+                  className={`w-3.5 h-3.5 transition-colors ${
+                    isActive ? "text-amber-300" : "text-[#756e5a] group-hover:text-[#1f1f1f]"
                   }`}
                 />
+                <span className="leading-none">{link.label}</span>
                 {link.badge !== null && link.badge !== undefined && (
                   <span
-                    className={`absolute -top-1 -right-1 w-5 h-5 rounded-full text-[10px] font-black flex items-center justify-center shadow transition-colors ${
+                    className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ml-0.5 transition-colors ${
                       isActive
-                        ? "bg-amber-300 text-[#6f2e18]"
-                        : "bg-[#6f2e18] text-white"
+                        ? "bg-white text-[#6f2e18]"
+                        : "bg-[#6f2e18] text-[#fcfbf9]"
                     }`}
                   >
                     {link.badge}
                   </span>
                 )}
-                {/* Floating Hover Tooltip */}
-                <span className="pointer-events-none absolute -bottom-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-150 whitespace-nowrap px-2.5 py-1 rounded-md bg-[#1f1f1f] text-[#fcfbf9] text-[11px] font-bold tracking-wide shadow-lg z-50">
-                  {link.label}
-                </span>
               </Link>
             );
           })}
@@ -158,7 +154,7 @@ export const Header: React.FC = () => {
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
-            className="md:hidden p-2.5 text-[#1f1f1f] border border-[#d7d4c8] bg-white hover:bg-[#f5f4ef] rounded-full shadow-2xs transition-colors"
+            className="lg:hidden p-2.5 text-[#1f1f1f] border border-[#d7d4c8] bg-white hover:bg-[#f5f4ef] rounded-full shadow-2xs transition-colors"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -167,7 +163,7 @@ export const Header: React.FC = () => {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-[#e5e5e2] bg-[#fcfbf9] px-4 py-4 space-y-2 shadow-xl">
+        <div className="lg:hidden border-t border-[#e5e5e2] bg-[#fcfbf9] px-4 py-4 space-y-2 shadow-xl">
           {navLinks.map((link) => {
             const Icon = link.icon;
             const isActive = pathname === link.href;
