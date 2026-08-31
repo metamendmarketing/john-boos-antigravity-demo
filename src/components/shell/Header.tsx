@@ -50,10 +50,8 @@ export const Header: React.FC = () => {
       {/* Official Top Announcement Bar - Centered */}
       <div className="bg-[#121212] text-[#fcfbf9] px-4 sm:px-8 py-2 flex items-center justify-center text-[11px] font-sans tracking-widest uppercase">
         <div className="flex items-center space-x-3 text-center">
-          <span className="font-bold text-amber-300">1887</span>
+          <span className="font-semibold text-zinc-200">The Trusted Tradition Since 1887</span>
           <span className="text-zinc-500">&bull;</span>
-          <span className="font-semibold text-zinc-200 hidden sm:inline">The Trusted Tradition Since 1887</span>
-          <span className="text-zinc-500 hidden sm:inline">&bull;</span>
           <span className="text-zinc-300">Commercial Foodservice Sizing Engine</span>
         </div>
       </div>
