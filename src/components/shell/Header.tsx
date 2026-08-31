@@ -2,15 +2,13 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   FolderKanban,
   Columns2,
   SlidersHorizontal,
-  LogOut,
   Layers,
   Sparkles,
-  ShieldCheck,
   Menu,
   X,
   BookOpen,
@@ -20,20 +18,9 @@ import { useCompareList } from "@/lib/compare-store";
 
 export const Header: React.FC = () => {
   const pathname = usePathname();
-  const router = useRouter();
   const { itemCount } = useProjectSchedule();
   const { compareCount } = useCompareList();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const handleLogout = async () => {
-    try {
-      await fetch("/api/auth", { method: "DELETE" });
-      router.push("/login");
-      router.refresh();
-    } catch {
-      // ignore
-    }
-  };
 
   const navLinks = [
     { href: "/", label: "Specifier", icon: Sparkles },
@@ -60,22 +47,14 @@ export const Header: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-50 bg-[#fcfbf9] border-b border-[#e5e5e2] shadow-xs text-[#1f1f1f]">
-      {/* Official Top Announcement Bar */}
-      <div className="bg-[#121212] text-[#fcfbf9] px-4 sm:px-8 py-2 flex items-center justify-between text-[11px] font-sans tracking-widest uppercase">
-        <div className="flex items-center space-x-3">
+      {/* Official Top Announcement Bar - Centered */}
+      <div className="bg-[#121212] text-[#fcfbf9] px-4 sm:px-8 py-2 flex items-center justify-center text-[11px] font-sans tracking-widest uppercase">
+        <div className="flex items-center space-x-3 text-center">
           <span className="font-bold text-amber-300">1887</span>
           <span className="text-zinc-500">&bull;</span>
           <span className="font-semibold text-zinc-200 hidden sm:inline">The Trusted Tradition Since 1887</span>
           <span className="text-zinc-500 hidden sm:inline">&bull;</span>
           <span className="text-zinc-300">Commercial Foodservice Sizing Engine</span>
-        </div>
-        <div className="flex items-center space-x-4 text-zinc-300">
-          <span className="flex items-center text-emerald-400 font-medium normal-case tracking-normal">
-            <ShieldCheck className="w-3.5 h-3.5 mr-1" />
-            Verified Catalog Truth-Set
-          </span>
-          <span className="text-zinc-700 hidden md:inline">|</span>
-          <span className="hidden md:inline normal-case tracking-normal text-zinc-400">Effingham, Illinois</span>
         </div>
       </div>
 
@@ -139,18 +118,8 @@ export const Header: React.FC = () => {
           })}
         </nav>
 
-        {/* Right: Header Action Controls & Demo Lock */}
-        <div className="flex-shrink-0 flex items-center space-x-2.5">
-          <button
-            onClick={handleLogout}
-            title="Exit Demo"
-            className="hidden sm:flex items-center space-x-1.5 px-4 py-2 rounded-full border border-[#d7d4c8] bg-white hover:bg-[#f5f4ef] text-[#5c5645] hover:text-[#1f1f1f] text-xs font-bold uppercase tracking-wider shadow-2xs hover:shadow-xs transition-all"
-          >
-            <LogOut className="w-4 h-4 text-[#756e5a]" />
-            <span>Lock</span>
-          </button>
-
-          {/* Mobile Menu Toggle Button */}
+        {/* Right: Mobile Menu Toggle Button */}
+        <div className="flex-shrink-0 flex items-center">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
