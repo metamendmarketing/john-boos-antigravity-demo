@@ -54,6 +54,10 @@ export const Header: React.FC = () => {
     { href: "/about-demo", label: "Heritage & Proof", icon: BookOpen },
   ];
 
+  if (pathname === "/login") {
+    return null;
+  }
+
   return (
     <header className="sticky top-0 z-50 bg-[#fcfbf9] border-b border-[#e5e5e2] shadow-xs text-[#1f1f1f]">
       {/* Official Top Announcement Bar */}
